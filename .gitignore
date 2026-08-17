@@ -1,0 +1,104 @@
+# ── Python ─────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# ── Virtual environments ───────────────────────────────────
+# Never commit these. They are large, machine-specific, and
+# rebuildable from requirements.txt in one command.
+.venv/
+venv/
+env/
+ENV/
+
+# ── Packaging / build output ───────────────────────────────
+build/
+dist/
+sdist/
+wheels/
+*.egg-info/
+*.egg
+.eggs/
+MANIFEST
+
+# ── Flet build output ──────────────────────────────────────
+# `flet build` writes platform bundles here.
+build/
+.flet/
+*.apk
+*.aab
+*.ipa
+*.app/
+
+# ── Tests / type checking / linting caches ─────────────────
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# ── Environment & secrets ──────────────────────────────────
+# If you ever add an API key (a real AI backend for the
+# practice view, for example), put it in .env — never in a
+# .py file. This line keeps it off GitHub.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+credentials.json
+
+# ── Local databases / user data ────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Editors & IDEs ─────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cursor/
+
+# ── OS cruft ───────────────────────────────────────────────
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ── Logs & scratch ─────────────────────────────────────────
+*.log
+logs/
+tmp/
+temp/
+scratch/
+
+# ── Agent / tooling scratch ────────────────────────────────
+.agents/
+
+# ── Unused font downloads ──────────────────────────────────
+# app/theme.py loads only the three loose .ttf files directly in
+# assets/fonts/. These folders are the original Google Fonts zip
+# contents and are byte-identical duplicates — about 17 MB of dead
+# weight. The files stay on your disk; they just don't go to GitHub.
+# Delete these three lines if you ever need the other weights.
+assets/fonts/Noto_Sans/
+assets/fonts/Noto_Sans_TC/
+assets/fonts/Noto_Serif_TC/
+
+# ── Local notes, not part of the project ───────────────────
+GITHUB_SETUP.md

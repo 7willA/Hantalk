@@ -1,0 +1,65 @@
+Copyright (c) 2026 Wilkend. All rights reserved.
+
+PROPRIETARY SOFTWARE — ALL RIGHTS RESERVED
+
+This repository and its contents — including the source code, the
+lesson content, the design system, and all accompanying assets
+(collectively, the "Software") — are the exclusive property of the
+copyright holder named above.
+
+WHAT YOU MAY DO
+
+  You may view and read the Software for the sole purposes of
+  evaluation, academic review, and personal reference.
+
+WHAT YOU MAY NOT DO
+
+  Without the prior written permission of the copyright holder, you
+  may NOT:
+
+    1. copy, reproduce, or redistribute the Software or any part of
+       it;
+    2. modify, adapt, translate, or create derivative works based on
+       the Software;
+    3. use the Software or any part of it in any other project,
+       whether commercial or non-commercial;
+    4. publish, sublicense, sell, rent, lease, or otherwise transfer
+       rights to the Software;
+    5. use the Software to train, fine-tune, or evaluate machine
+       learning models or datasets;
+    6. remove or alter any copyright, authorship, or proprietary
+       notice contained in the Software.
+
+  Making the Software publicly visible on a code-hosting platform
+  does not grant any license to it beyond the viewing permitted
+  above, and does not place it in the public domain. Any forking
+  functionality provided by the hosting platform is permitted only to
+  the extent required by that platform's terms of service, and confers
+  no right to use, modify, or redistribute the Software.
+
+NO WARRANTY
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
+  NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE
+  FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+  CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION
+  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+PERMISSIONS AND INQUIRIES
+
+  To request permission for any use not expressly granted above,
+  contact the copyright holder.
+
+THIRD-PARTY COMPONENTS
+
+  This Software depends on and bundles third-party components that
+  remain under their own licenses, including:
+
+    - Flet (Apache License 2.0) — https://flet.dev
+    - Noto Sans / Noto Sans TC / Noto Serif TC fonts
+      (SIL Open Font License 1.1) — https://fonts.google.com/noto
+
+  Nothing in this license restricts your rights to those components
+  as obtained from their original sources.

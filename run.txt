@@ -1,0 +1,7 @@
+cd C:\Users\User\Desktop\hantalk_flet
+
+python -m venv .venv
+
+.venv\Scripts\activate
+
+pip install -r requirements.txt
