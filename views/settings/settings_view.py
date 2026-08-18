@@ -27,6 +27,7 @@ import datetime
 import flet as ft
 
 from app import theme
+from app.screen import safe_top
 from services import settings_service as settings
 
 LEGAL_LINKS = ("TÈM", "KONFIDANSYALITE", "SOU HANTALK")
@@ -535,7 +536,7 @@ def settings_view(page: ft.Page) -> ft.View:
         spacing=0,
         bgcolor=theme.BACKGROUND,
         controls=[
-            header,
+            safe_top(header),
             ft.Container(
                 expand=True,
                 padding=ft.Padding.symmetric(horizontal=theme.PAD_PAGE),

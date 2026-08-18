@@ -12,6 +12,7 @@ import flet as ft
 import flet.canvas as cv
 
 from app import theme
+from app.screen import safe_top
 from data.drills import DRILLS, Drill
 
 ACCURACY = 84
@@ -304,5 +305,5 @@ def drills_view(page: ft.Page) -> ft.View:
         bgcolor=theme.BACKGROUND,
         navigation_bar=nav,
         floating_action_button=start_button,
-        controls=[header, accuracy_card, body],
+        controls=[safe_top(header), accuracy_card, body],
     )

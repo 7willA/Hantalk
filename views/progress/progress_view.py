@@ -11,6 +11,7 @@ gen yon kote pou l ale.
 import flet as ft
 
 from app import theme
+from app.screen import safe_top
 from data.lessons.all_lessons import ALL_LESSONS
 
 
@@ -69,7 +70,7 @@ def profile_view(page: ft.Page) -> ft.View:
         bgcolor=theme.BACKGROUND,
         navigation_bar=nav,
         controls=[
-            ft.Container(height=10),
+            safe_top(ft.Container(height=10)),
             ft.Row(
                 spacing=14,
                 vertical_alignment=ft.CrossAxisAlignment.CENTER,

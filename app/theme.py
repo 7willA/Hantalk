@@ -2,32 +2,6 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Theme — Hantalk design tokens, derived from the app logo.
-
-PALETTE SOURCE — assets/images/logo6.jpeg. Nothing here is invented:
-    left leg of the H   gold #FDC534 -> orange #F39E4A
-    right leg of the H  sky  #2A9AE6 -> blue   #3A8FD5
-    wordmark            navy #243D7D
-    canvas              cool white #FDFBFE
-
-THE RULE THAT HOLDS IT TOGETHER — respect it and the app stays coherent:
-    NAVY   = structure   headers, nav, body text, borders, primary buttons
-    ORANGE = energy      streak, XP, progress fills, "Continue"
-    BLUE   = active      selected tab, lit chip, current selection
-    GOLD   = reward      badges, levels, completion
-
-WHY NAVY IS PRIMARY AND NOT ORANGE. Orange on a light background is 2.05:1 —
-it can never carry text or a button label. Navy is 9.85:1. So navy does the
-work that must be readable, orange does the work that must be *noticed*
-(icons, bars, fills). Every color below is tagged with its measured ratio.
-Anything under 4.5:1 is marked "graphics" and must never hold text.
-
-Neutrals are the SLATE family (blue-tinted grey), not zinc. A navy/blue logo
-on a warm or dead-neutral grey reads as two unrelated brands.
-
-Flutter counterpart: lib/app/theme.dart
-"""
-
 import flet as ft
 
 # ═════════════════════════════════════════════════
@@ -35,7 +9,7 @@ import flet as ft
 # ═════════════════════════════════════════════════
 
 # ─────────────────────────────────────
-# 🚀 HERO / ONBOARDING SCREEN
+# HERO / ONBOARDING SCREEN
 # ─────────────────────────────────────
 HERO_BG = "#F8FAFC"             # Main screen background on first launch / welcome screens
 HERO_GRADIENT_START = "#243D7D" # Navy — top/start of hero banners & CTA buttons (logo wordmark)
@@ -55,7 +29,7 @@ HERO_ACCENT_DEEP = "#172554"    # Deep navy text sitting inside soft blue badges
 
 
 # ─────────────────────────────────────
-# 🏠 HOME DASHBOARD
+# HOME DASHBOARD
 # ─────────────────────────────────────
 HOME_BG = "#F8FAFC"             # Main dashboard page background (cool porcelain, matches logo canvas)
 
@@ -91,7 +65,7 @@ HOME_NAV_IDLE_FG = "#64748B"    # Unselected nav icons and labels (4.55:1)
 
 
 # ─────────────────────────────────────
-# 🤖 AI LIVE CHAT SCREEN (DARK MODE)
+# AI LIVE CHAT SCREEN (DARK MODE)
 # ─────────────────────────────────────
 # Deep NAVY, not black. Black would break the brand the moment the user
 # switches from Home to this screen.
@@ -128,7 +102,7 @@ AI_MIC_ACTIVE = "#F97316"       # Main microphone button while recording (orange
 
 
 # ─────────────────────────────────────
-# 📚 LESSON & FLASHCARD SCREEN
+# LESSON & FLASHCARD SCREEN
 # ─────────────────────────────────────
 LESSON_BG = "#F8FAFC"           # Screen background for flashcards, quizzes, and exercises
 
@@ -162,7 +136,7 @@ ON_PRIMARY_FILM = "#33FFFFFF"   # Subtle white overlay on active option cards
 
 
 # ─────────────────────────────────────
-# 🔤 PHONETIC SCREEN (4 systems, toggleable)
+# PHONETIC SCREEN 
 # ─────────────────────────────────────
 # Each writing system gets its own hue so the eye identifies it instantly.
 PH_BG = "#F8FAFC"               # Phonetic screen background
@@ -178,10 +152,9 @@ PH_SLIDER_FG = "#243D7D"        # Audio slider filled track and thumb
 
 
 # ─────────────────────────────────────
-# 🎮 REWARD & GAMIFICATION SCREEN
+# REWARD & GAMIFICATION SCREEN
 # ─────────────────────────────────────
-# Gold is the only color that arrives from the logo already meaning "reward" —
-# it is the brightest point of the H's left leg.
+
 REWARD_BG = "#F8FAFC"           # Background for lesson-complete and daily-recap modals
 
 REWARD_GOLD = "#F59E0B"         # Coin, trophy, and star icons (2.05:1 — graphics only)
@@ -196,7 +169,7 @@ REWARD_SUCCESS = "#10B981"      # Accuracy gauge fill (e.g., "98% Accuracy") —
 
 
 # ─────────────────────────────────────
-# 🌑 GLOBAL DARK MODE OVERRIDES
+# GLOBAL DARK MODE OVERRIDES
 # ─────────────────────────────────────
 DARK_BG = "#0B1220"             # System-wide dark mode background (deep navy)
 DARK_SURFACE = "#16213A"        # Cards, bottom sheets, and nav bars in dark mode
@@ -213,14 +186,14 @@ DARK_RED = "#FF6B5E"            # Red accent lifted for dark backgrounds
 
 
 # ─────────────────────────────────────
-# ⚪ STANDARD NEUTRALS
+# STANDARD NEUTRALS
 # ─────────────────────────────────────
 WHITE = "#FFFFFF"               # Pure white for text on navy buttons and clean surfaces
 BLACK = "#000000"               # Absolute black — shadows only, never a background
 
 
 # ─────────────────────────────────────
-# 🗺️ SECTION PALETTE (unit banners on the learning path)
+# SECTION PALETTE (unit banners on the learning path)
 # ─────────────────────────────────────
 # Duolingo gives every unit banner its own color — that is how each unit gets
 # an identity without drawing new artwork. Same idea here, but every hue is

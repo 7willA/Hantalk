@@ -25,6 +25,7 @@ SA NOU PA PRAN NAN YO
 import flet as ft
 
 from app import theme
+from app.screen import safe_top
 from controls.node_callout import locked_callout, node_callout
 from controls.path_banner import path_banner
 from controls.path_node import path_node
@@ -249,7 +250,7 @@ def home_view(page: ft.Page) -> ft.View:
         bgcolor=theme.BACKGROUND,
         navigation_bar=_nav_bar(page),
         controls=[
-            _top_bar(course_pct, open_settings),
+            safe_top(_top_bar(course_pct, open_settings)),
             ft.Container(
                 expand=True,
                 padding=ft.Padding.symmetric(horizontal=theme.PAD_PAGE),

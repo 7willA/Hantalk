@@ -11,6 +11,7 @@ DEMO: pa gen STT/TTS ni API. Bouton mic la jis chanje eta afichaj la.
 import flet as ft
 
 from app import theme
+from app.screen import safe_bottom, safe_top
 
 SCENARIO = "Ordering food at a night market"
 TEACHER = "Teacher Chen"
@@ -240,5 +241,5 @@ def ai_conversation_view(page: ft.Page) -> ft.View:
         padding=0,
         spacing=0,
         bgcolor=theme.DARK_BG,
-        controls=[stage, subtitles, controls_row],
+        controls=[safe_top(stage), subtitles, safe_bottom(controls_row)],
     )

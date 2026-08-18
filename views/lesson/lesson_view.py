@@ -11,6 +11,7 @@ Flutter counterpart: lib/screens/lesson/lesson_screen.dart
 import flet as ft
 
 from app import theme
+from app.screen import safe_top
 from controls.grammar_table import grammar_table
 from data.lessons.all_lessons import get_lesson
 from models.dialogue import DialogueLine
@@ -392,11 +393,11 @@ def lesson_view(page: ft.Page, number: int) -> ft.View:
         spacing=0,
         bgcolor=theme.BACKGROUND,
         controls=[
-            ft.Container(
+            safe_top(ft.Container(
                 bgcolor=theme.SURFACE,
                 padding=ft.Padding.only(left=8, right=8, top=14),
                 content=_app_bar(page, lesson),
-            ),
+            )),
             tabs,
         ],
     )

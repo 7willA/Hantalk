@@ -30,6 +30,7 @@ BOUTON GID LA
 import flet as ft
 
 from app import theme
+from app.screen import safe_top
 from controls.node_callout import locked_callout, node_callout
 from controls.path_banner import path_banner
 from controls.path_node import KIND_ICONS, path_node
@@ -234,7 +235,7 @@ def unit_view(page: ft.Page, lesson_number: int) -> ft.View:
         spacing=0,
         bgcolor=theme.BACKGROUND,
         controls=[
-            header,
+            safe_top(header),
             ft.Container(
                 expand=True,
                 padding=ft.Padding.symmetric(horizontal=theme.PAD_PAGE),

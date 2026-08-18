@@ -17,6 +17,8 @@ moso pa moso. `{n}` vle di "nenpòt moso, pran l kòm yon nonm".
 import flet as ft
 
 from app import theme
+from app.screen import screen
+from views.auth.forgot_password_view import forgot_password_view
 from views.auth.login_view import login_view
 from views.auth.register_view import register_view
 from views.auth.splash_view import splash_view
@@ -34,6 +36,7 @@ from services import settings_service
 STATIC = {
     "/": splash_view,
     "/login": login_view,
+    "/forgot": forgot_password_view,
     "/register": register_view,
     "/home": home_view,
     "/drills": drills_view,
@@ -71,27 +74,13 @@ def _not_found(page: ft.Page, route: str) -> ft.View:
     async def go_home(e):
         await page.push_route("/home")
 
-    return ft.View(
-        route=route,
-        bgcolor=theme.BACKGROUND,
-        vertical_alignment=ft.MainAxisAlignment.CENTER,
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        controls=[
-            ft.Column(
-                expand=True,
-                spacing=10,
-                alignment=ft.MainAxisAlignment.CENTER,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                controls=[
-                    ft.Text("404", size=42, weight=ft.FontWeight.BOLD,
-                            color=theme.PRIMARY),
-                    ft.Text(route, size=13, color=theme.TEXT_MUTED),
-                    ft.TextButton("Go home", on_click=go_home,
-                                  style=ft.ButtonStyle(color=theme.PRIMARY)),
-                ],
-            )
-        ],
-    )
+    return screen(route, [
+        ft.Text("404", size=42, weight=ft.FontWeight.BOLD,
+                color=theme.PRIMARY),
+        ft.Text(route, size=13, color=theme.TEXT_MUTED),
+        ft.TextButton("Go home", on_click=go_home,
+                      style=ft.ButtonStyle(color=theme.PRIMARY)),
+    ], spacing=10, scroll=False)
 
 
 def _build(page: ft.Page, route: str) -> ft.View:

@@ -10,6 +10,7 @@
 import flet as ft
 
 from app import theme
+from app.screen import safe_bottom, safe_top
 from controls.phonetic_text import phonetic_card, phonetic_chip
 from data.lessons.all_lessons import get_lesson
 
@@ -219,7 +220,7 @@ def phonetic_view(page: ft.Page, lesson_number: int, line_index: int) -> ft.View
         spacing=0,
         bgcolor=theme.BACKGROUND,
         controls=[
-            header,
+            safe_top(header),
             ft.Container(
                 padding=ft.Padding.only(left=20, right=20, top=16),
                 content=chips_row,
@@ -229,6 +230,6 @@ def phonetic_view(page: ft.Page, lesson_number: int, line_index: int) -> ft.View
                 padding=ft.Padding.only(left=20, right=20, top=18, bottom=20),
                 content=body,
             ),
-            player,
+            safe_bottom(player),
         ],
     )

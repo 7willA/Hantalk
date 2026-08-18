@@ -10,6 +10,7 @@ Flashcards: ba pwogrè an segman, kat ki flip, Review / Know it.
 import flet as ft
 
 from app import theme
+from app.screen import safe_bottom, safe_top
 from controls.vocab_card import vocab_card
 from data.lessons.all_lessons import get_lesson
 
@@ -203,12 +204,12 @@ def vocab_view(page: ft.Page, lesson_number: int) -> ft.View:
         spacing=0,
         bgcolor=theme.BACKGROUND,
         controls=[
-            header,
+            safe_top(header),
             ft.Container(
                 padding=ft.Padding.only(left=20, right=20, top=14),
                 content=progress_row,
             ),
             stage,
-            actions,
+            safe_bottom(actions),
         ],
     )
