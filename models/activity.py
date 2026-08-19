@@ -33,6 +33,7 @@ class ActivityKind(str, Enum):
 
     DYALOG = "dyalog"
     VOKABILE = "vokabile"
+    EGZESIS = "egzesis"
     FONETIK = "fonetik"
     TON = "ton"
     AI = "ai"
@@ -49,6 +50,7 @@ class ActivityState(str, Enum):
 KIND_LABELS: dict[ActivityKind, tuple[str, str]] = {
     ActivityKind.DYALOG: ("Dyalòg", "Koute epi li konvèsasyon an"),
     ActivityKind.VOKABILE: ("Vokabilè", "Kat memwa pou mo nouvo yo"),
+    ActivityKind.EGZESIS: ("Egzèsis", "Teste sa w sonje — 12 kesyon"),
     ActivityKind.FONETIK: ("Fonetik", "漢字 · ㄅㄆㄇ · Tongyong · Pinyin"),
     ActivityKind.TON: ("Ton", "Antrene 4 ton yo ak ton netral la"),
     ActivityKind.AI: ("Pratike", "Pale ak pwofesè AI a"),
@@ -56,9 +58,14 @@ KIND_LABELS: dict[ActivityKind, tuple[str, str]] = {
 
 # Lòd nœud yo sou chemen an. Fonetik vin apre dyalòg paske ou bezwen
 # tande fraz la anvan ou dekonpoze son li.
+#
+# EGZESIS chita apre VOKABILE espre: se premye moman nan inite a kote
+# app la MANDE w yon bagay olye li MONTRE w yon bagay. Anvan li, ou te
+# resevwa; apre li, ou pwodwi.
 KIND_ORDER: tuple[ActivityKind, ...] = (
     ActivityKind.DYALOG,
     ActivityKind.VOKABILE,
+    ActivityKind.EGZESIS,
     ActivityKind.FONETIK,
     ActivityKind.TON,
     ActivityKind.AI,
@@ -94,6 +101,7 @@ class Activity:
         return {
             ActivityKind.DYALOG: f"/lesson/{n}",
             ActivityKind.VOKABILE: f"/vocab/{n}",
+            ActivityKind.EGZESIS: f"/exercise/{n}",
             ActivityKind.FONETIK: f"/phonetic/{n}/0",
             ActivityKind.TON: "/drills",
             ActivityKind.AI: "/practice",
@@ -112,6 +120,10 @@ def _item_count(lesson, kind: ActivityKind) -> int:
         return len(lesson.dialogue.lines) if lesson.dialogue else 0
     if kind is ActivityKind.VOKABILE:
         return len(lesson.vocabulary)
+    if kind is ActivityKind.EGZESIS:
+        # Yon sesyon fiks. `models/session.py` gen valè a — nou pa
+        # enpòte l isit la pou `models/activity.py` rete san depandans.
+        return 12
     if kind is ActivityKind.FONETIK:
         return len(lesson.dialogue.lines) if lesson.dialogue else 0
     if kind is ActivityKind.TON:

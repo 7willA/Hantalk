@@ -35,6 +35,7 @@ from models.activity import ActivityKind, ActivityState
 KIND_ICONS: dict[ActivityKind, str] = {
     ActivityKind.DYALOG: ft.Icons.FORUM,
     ActivityKind.VOKABILE: ft.Icons.STYLE,
+    ActivityKind.EGZESIS: ft.Icons.CHECK_CIRCLE_OUTLINE,
     ActivityKind.FONETIK: ft.Icons.TRANSLATE,
     ActivityKind.TON: ft.Icons.GRAPHIC_EQ,
     ActivityKind.AI: ft.Icons.MIC,

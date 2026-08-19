@@ -134,19 +134,26 @@ async def set(key: str, value: object) -> bool:
         raise KeyError(f"Paramèt enkoni: {key}")
     _cache[key] = value
     try:
-        return await _prefs.set(PREFIX + key, value)  # type: ignore[arg-type]
+        return bool(await _prefs.set(PREFIX + key, value))  # type: ignore[arg-type]
     except Exception:
         return False
 
 
-async def reset() -> None:
-    """Retounen tout paramèt yo nan valè pa defo."""
+async def reset() -> bool:
+    """Retounen tout paramèt yo nan valè pa defo.
+
+    Retounen True si disk la vide san pwoblèm. `remove()` bay False lè kle
+    a pa t janm egziste — sa se PA yon echèk, se yon paramèt moun nan pa t
+    janm chanje. Se sèlman yon eksepsyon ki konte kòm echèk.
+    """
     _cache.update(DEFAULTS)
+    ok = True
     for key in DEFAULTS:
         try:
             await _prefs.remove(PREFIX + key)
         except Exception:
-            pass
+            ok = False
+    return ok
 
 
 # ── Èd espesifik ak Hantalk ────────────────────────────────

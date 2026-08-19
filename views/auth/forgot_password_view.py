@@ -7,6 +7,7 @@ import flet as ft
 from app import theme, validators
 from app.screen import screen
 from controls.brand import logo_mark
+from services import auth_service
 
 
 def _field(label: str) -> ft.TextField:
@@ -154,8 +155,8 @@ def forgot_password_view(page: ft.Page) -> ft.View:
         btn_label.value = "Sending…"
         page.update()
 
-        # TODO(you): auth_service.send_password_reset(
-        #     validators.normalize_identifier(contact.value))
+        auth_service.send_password_reset(
+            validators.normalize_identifier(contact.value))
         sent_to.value = contact.value.strip()
         form.visible = False
         confirmation.visible = True

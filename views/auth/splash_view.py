@@ -10,7 +10,7 @@ from app import theme
 from app.screen import screen
 from controls.brand import logo_mark
 
-SPLASH_SECONDS = 2
+SPLASH_SECONDS = 5
 
 
 def splash_view(page: ft.Page) -> ft.View:
@@ -28,7 +28,8 @@ def splash_view(page: ft.Page) -> ft.View:
         ft.Text("Hantalk", size=30, weight=ft.FontWeight.BOLD,
                 color=theme.TEXT),
         ft.Container(height=6),
-        ft.Text("Learn Taiwanese Mandarin the way it's spoken in Taiwan",
+        ft.Text("Learn Taiwanese Mandarin " \
+        "the way it's spoken in Taiwan",
                 size=13, color=theme.TEXT_MUTED),
         ft.Container(height=34),
         ft.ProgressRing(width=22, height=22, stroke_width=2,

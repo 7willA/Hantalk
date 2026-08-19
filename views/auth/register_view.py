@@ -2,41 +2,13 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Register view — create an account.
-
-DEMO: no backend yet. A valid form leads straight to /home.
-`auth_service` is still a stub — the single call site is marked TODO below.
-
-WHAT THIS SCREEN ASKS
-
-  Display name, email OR phone number, password, confirm password, and
-  consent. Nothing else. Everything a language app wants to know about
-  the learner (level, goal, phonetic system, daily goal) belongs AFTER
-  signup, in an onboarding flow, where the user is already invested.
-
-  Social sign-in buttons live on the LOGIN screen, not here.
-
-VALIDATION RULES
-
-  Errors appear on blur (when the user leaves a field), never on every
-  keystroke — nobody wants "invalid email" flashing at them while they
-  are still typing the first letter. An error clears the instant the
-  user fixes it. The submit button stays disabled until every rule
-  passes, and a final check runs on submit anyway.
-
-  The rules themselves live in `app/validators.py`, shared with /login
-  and /forgot — one source of truth, so a phone number accepted here
-  can never be rejected at login.
-"""
-
 import flet as ft
 
 from app import theme, validators
 from app.screen import screen
 from controls.brand import logo_mark
 
-# Ki koulè pou chak nivo nan mèt fòs modpas la. `validators.strength()`
-# bay nòt la ak etikèt la; ekran an chwazi koulè a.
+
 STRENGTH_COLORS = (
     theme.ERROR_TEXT,     # 0 Weak
     theme.ERROR_TEXT,     # 1 Weak
@@ -284,7 +256,8 @@ def register_view(page: ft.Page) -> ft.View:
         ft.Text("Create your account", size=26,
                 weight=ft.FontWeight.BOLD, color=theme.TEXT),
         ft.Container(height=4),
-        ft.Text("12 lessons of Taiwanese Mandarin await",
+        ft.Text("Enter the details " \
+        "below to connect an account",
                 size=13, color=theme.TEXT_MUTED),
         ft.Container(height=26),
 

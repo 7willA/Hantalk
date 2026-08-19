@@ -36,7 +36,12 @@ class FakePage:
     # espre — konsa si yon view sèvi avè l ankò, tès la ap kraze.
 
     def run_task(self, fn, *args):
-        pass
+        # Flet la vre egzije yon `async def` isit la — si nou aksepte tout
+        # bagay, tès la ap di "ok" pandan app la ap kraze sou telefòn nan.
+        import asyncio
+        assert asyncio.iscoroutinefunction(fn), (
+            f"run_task mande yon `async def`, li resevwa {fn!r}"
+        )
 
     def update(self):
         pass
@@ -44,7 +49,9 @@ class FakePage:
 
 ROUTES = [
     "/", "/login", "/register", "/home", "/drills", "/practice", "/profile",
+    "/settings",
     "/lesson/1", "/lesson/12", "/vocab/2", "/phonetic/1/0", "/phonetic/2/5",
+    "/unit/1", "/unit/2", "/exercise/1", "/exercise/2", "/exercise/12",
     "/nope", "/lesson/99",
 ]
 

@@ -27,6 +27,7 @@ from views.home.home_view import home_view
 from views.lesson.lesson_view import lesson_view
 from views.lesson.phonetic_view import phonetic_view
 from views.practice.ai_conversation_view import ai_conversation_view
+from views.practice.exercise_view import exercise_view
 from views.progress.progress_view import profile_view
 from views.settings.settings_view import settings_view
 from views.unit.unit_view import unit_view
@@ -50,6 +51,7 @@ DYNAMIC = {
     ("unit", "{n}"): unit_view,
     ("lesson", "{n}"): lesson_view,
     ("vocab", "{n}"): vocab_view,
+    ("exercise", "{n}"): exercise_view,
     ("phonetic", "{n}", "{i}"): phonetic_view,
 }
 
