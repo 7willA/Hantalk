@@ -2,10 +2,10 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Phonetic text control — yon kat pou yon sèl sistèm fonetik.
+"""Phonetic text control — a card for a single phonetic system.
 
 Flutter counterpart: lib/widgets/phonetic_text.dart
-Design: ekran 03, kat Characters / Pinyin.
+Design: screen 03, Characters / Pinyin card.
 """
 
 import flet as ft
@@ -21,10 +21,10 @@ def phonetic_card(
     serif: bool = False,
     letter_spacing: float = 0,
 ) -> ft.Control:
-    """Kat gri ak yon etikèt anlè epi tèks la anba.
+    """Gray card with a label on top and the text below.
 
     label  -- "Characters", "Pinyin"
-    serif  -- True pou karaktè yo (Noto Serif TC), False pou pinyin an
+    serif  -- True for the characters (Noto Serif TC), False for pinyin
     """
     return ft.Container(
         bgcolor=theme.SURFACE,
@@ -56,7 +56,7 @@ def phonetic_card(
 
 
 def phonetic_chip(label: str, on: bool, on_click) -> ft.Control:
-    """Chip toggle ak yon tchèk lè li aktif."""
+    """Toggle chip with a checkmark when it's active."""
     return ft.Container(
         height=34,
         padding=ft.Padding.only(left=10, right=13),

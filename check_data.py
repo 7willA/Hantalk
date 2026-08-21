@@ -2,14 +2,14 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Zouti tès pou kouch done a — kouri l nan tèminal, pa nan app la.
+"""Test tool for the data layer — run it in the terminal, not in the app.
 
     python check_data.py
 
-Li montre estrikti Seksyon → Inite → Nœud la san louvri app la.
-Sèvi avè l chak fwa ou chanje `ALL_SECTIONS` oswa yon leson: si w fè
-yon erè (yon leson nan de seksyon, yon leson bliye), l ap di w la menm
-olye inite a jis disparèt sou Home san esplikasyon.
+It shows the Section → Unit → Node structure without opening the app.
+Use it every time you change `ALL_SECTIONS` or a lesson: if you make
+a mistake (a lesson in two sections, a forgotten lesson), it will tell
+you right away instead of the unit just disappearing from Home with no explanation.
 """
 
 from app import theme

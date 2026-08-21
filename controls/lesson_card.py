@@ -2,10 +2,8 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Lesson card control — kat leson pou lis Home lan.
-
-Flutter counterpart: lib/widgets/lesson_card.dart
-Design: ekran 01 HOME nan handoff la (sc-for lessons).
+"""Lesson card control — lesson card for the Home list.
+Design: screen 01 HOME in the handoff (sc-for lessons).
 """
 
 import flet as ft
@@ -19,17 +17,17 @@ def lesson_card(
     selected: bool = False,
     on_click=None,
 ) -> ft.Control:
-    """Bati yon kat leson pou lis Home lan.
+    """Build a lesson card for the Home list.
 
-    lesson    -- done ki pou parèt
-    selected  -- si se leson k ap li kounye a (fon woz)
-    on_click  -- fonksyon pou rele lè yo tap kat la
+    lesson    -- the lesson data to show
+    selected  -- true if this is the lesson currently being read (pink background)
+    on_click  -- function to call when the card is tapped
     """
     locked = lesson.is_locked
     done = lesson.progress >= 1.0
     active = 0 < lesson.progress < 1
 
-    # fon kat la
+    # card background
     if locked:
         card_bg = theme.LOCKED_BG
     elif selected:
@@ -59,7 +57,7 @@ def lesson_card(
 
     bar_color = theme.PRIMARY if done else theme.PROGRESS_ACTIVE
 
-    # tit + soutit (+ ba pwogrè si leson an pa lòk)
+    # title + subtitle (+ progress bar if the lesson is not locked)
     middle = [
         ft.Text(
             lesson.traditional,

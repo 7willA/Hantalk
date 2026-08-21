@@ -2,55 +2,56 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Settings service — preferans itilizatè a, sove sou aparèy la.
+"""Settings service — user preferences, saved on the device.
 
 Flutter counterpart: lib/services/settings_service.dart
 
-KIJAN LI MACHE
+HOW IT WORKS
 
-  Flet 0.85 sèvi ak `ft.SharedPreferences`, ki se yon *Service*: fòk li
-  atache sou yon View pou l viv (gade `app/router.py`). Metòd li yo tout
-  se `async`.
+  Flet 0.85 uses `ft.SharedPreferences`, which is a *Service*: it has
+  to be attached to a View to stay alive (see `app/router.py`). All of
+  its methods are `async`.
 
-  Men yon UI pa ka tann yon `await` chak fwa li bezwen konnen si Pinyin
-  allime. Donk:
+  But a UI can't wait for an `await` every time it needs to know
+  whether Pinyin is on. So:
 
-    - `load()`   li disk la YON SÈL fwa nan demaraj → ranpli `_cache`
-    - `get()`    li `_cache` la — SINKWÒN, rapid, san `await`
-    - `set()`    ekri nan `_cache` LA MENM, epi sove sou disk apre
+    - `load()`   reads disk ONCE at startup → fills `_cache`
+    - `get()`    reads `_cache` — SYNCHRONOUS, fast, no `await`
+    - `set()`    writes to `_cache` RIGHT AWAY, then saves to disk after
 
-  Konsa ekran an reponn imedyatman epi disk la swiv dèyè. Si sovgad la
-  echwe (pa egzanp sou web san pèmisyon), app la kontinye mache ak
-  valè ki nan memwa a — li p ap janm krache yon erè nan figi moun nan.
+  This way the screen responds immediately and disk catches up behind
+  it. If the save fails (for example on web without permission), the
+  app keeps working with the value in memory — it will never throw an
+  error in the person's face.
 """
 
 import flet as ft
 
-# Tout kle yo gen menm prefiks la pou yo pa antre nan wout lòt app.
+# All keys share the same prefix so they don't collide with another app.
 PREFIX = "hantalk."
 
-# Sous verite a pou chak paramèt: kle → valè pa defo.
-# Tip valè a defini tip ki aksepte a (gade `_coerce`).
+# Source of truth for each setting: key → default value.
+# The value's type defines the type that's accepted (see `_coerce`).
 DEFAULTS: dict[str, object] = {
-    # ── Aprantisaj ──
+    # ── Learning ──
     "phonetic_hanzi": True,
     "phonetic_bopomofo": False,
     "phonetic_tongyong": False,
     "phonetic_pinyin": True,
     "audio_speed": "normal",        # "normal" | "slow"
     "daily_goal_min": 20,           # 5 | 10 | 15 | 20
-    # ── Notifikasyon ──
+    # ── Notifications ──
     "notify_daily": True,
     "notify_time": "20:00",
     "notify_streak": True,
     "notify_weekly": False,
-    # ── Aparans ──
+    # ── Appearance ──
     "theme_mode": "light",          # "light" | "dark" | "system"
     "zh_text_scale": 1.0,           # 0.8 → 1.4
     "sound_effects": True,
 }
 
-# Kle fonetik yo — nou bezwen yo ansanm pou règ "omwen youn allime" a.
+# Phonetic keys — we need them together for the "at least one on" rule.
 PHONETIC_KEYS = (
     "phonetic_hanzi",
     "phonetic_bopomofo",
@@ -64,15 +65,15 @@ _loaded = False
 
 
 def service() -> ft.SharedPreferences:
-    """Sèvis la pou router a atache sou chak View."""
+    """The service for the router to attach to each View."""
     return _prefs
 
 
 def _coerce(default: object, value: object) -> object | None:
-    """Aksepte `value` sèlman si tip li matche ak tip `default` la.
+    """Accept `value` only if its type matches the type of `default`.
 
-    Atansyon: an Python `bool` se yon sou-klas `int`, donk `True` ta pase
-    pou yon `int` si nou pa teste bool an premye.
+    Watch out: in Python `bool` is a subclass of `int`, so `True` would
+    pass as an `int` if we didn't check bool first.
     """
     if isinstance(default, bool):
         return value if isinstance(value, bool) else None
@@ -86,7 +87,7 @@ def _coerce(default: object, value: object) -> object | None:
 
 
 async def load() -> dict[str, object]:
-    """Li tout paramèt yo sou disk la nan `_cache`. Rele l yon fwa."""
+    """Read every setting from disk into `_cache`. Call it once."""
     global _loaded
     for key, default in DEFAULTS.items():
         try:
@@ -104,7 +105,7 @@ def is_loaded() -> bool:
 
 
 def get(key: str) -> object:
-    """Li yon paramèt — sinkwòn, soti nan memwa."""
+    """Read a setting — synchronous, from memory."""
     return _cache.get(key, DEFAULTS.get(key))
 
 
@@ -125,13 +126,13 @@ def get_float(key: str) -> float:
 
 
 async def set(key: str, value: object) -> bool:
-    """Chanje yon paramèt: memwa touswit, disk apre.
+    """Change a setting: memory right away, disk after.
 
-    Retounen True si sovgad la reyisi. Menm si li echwe, `_cache` la
-    deja gen nouvo valè a — ekran an p ap janm parèt bloke.
+    Returns True if the save succeeded. Even if it fails, `_cache`
+    already has the new value — the screen will never appear stuck.
     """
     if key not in DEFAULTS:
-        raise KeyError(f"Paramèt enkoni: {key}")
+        raise KeyError(f"Unknown setting: {key}")
     _cache[key] = value
     try:
         return bool(await _prefs.set(PREFIX + key, value))  # type: ignore[arg-type]
@@ -140,11 +141,12 @@ async def set(key: str, value: object) -> bool:
 
 
 async def reset() -> bool:
-    """Retounen tout paramèt yo nan valè pa defo.
+    """Reset all settings back to their default values.
 
-    Retounen True si disk la vide san pwoblèm. `remove()` bay False lè kle
-    a pa t janm egziste — sa se PA yon echèk, se yon paramèt moun nan pa t
-    janm chanje. Se sèlman yon eksepsyon ki konte kòm echèk.
+    Returns True if disk was cleared without problems. `remove()`
+    returns False when the key never existed — that's NOT a failure,
+    it's a setting the person never changed. Only an exception counts
+    as a failure.
     """
     _cache.update(DEFAULTS)
     ok = True
@@ -156,17 +158,18 @@ async def reset() -> bool:
     return ok
 
 
-# ── Èd espesifik ak Hantalk ────────────────────────────────
+# ── Hantalk-specific helpers ────────────────────────────────
 
 def active_phonetic_count() -> int:
-    """Konbyen sistèm fonetik ki allime kounye a."""
+    """How many phonetic systems are currently on."""
     return sum(1 for k in PHONETIC_KEYS if get_bool(k))
 
 
 def can_turn_off(key: str) -> bool:
-    """Yon sistèm fonetik pa ka etenn si se dènye a ki rete.
+    """A phonetic system can't be turned off if it's the last one left.
 
-    San sa itilizatè a ta ka etenn tout bagay epi leson yo ta parèt vid.
+    Without this, the user could turn everything off and lessons would
+    appear empty.
     """
     if key not in PHONETIC_KEYS:
         return True

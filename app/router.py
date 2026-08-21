@@ -2,18 +2,6 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Router — mape non wout yo sou view yo.
-
-Flutter counterpart: lib/app/router.dart (go_router)
-
-De kalite wout:
-  - fiks       "/home", "/drills"        → yon antre nan STATIC
-  - ak paramèt "/lesson/2"               → yon patron nan DYNAMIC
-
-Patron yo senp espre: nou koupe wout la sou "/" epi nou konpare
-moso pa moso. `{n}` vle di "nenpòt moso, pran l kòm yon nonm".
-"""
-
 import flet as ft
 
 from app import theme
@@ -46,7 +34,7 @@ STATIC = {
     "/settings": settings_view,
 }
 
-# patron → (fonksyon view)
+# pattern → (view function)
 DYNAMIC = {
     ("unit", "{n}"): unit_view,
     ("lesson", "{n}"): lesson_view,
@@ -57,7 +45,7 @@ DYNAMIC = {
 
 
 def _match(parts: list[str], pattern: tuple[str, ...]) -> list[int] | None:
-    """Konpare yon wout ak yon patron. Retounen nonm yo, oswa None."""
+    """Compare a route to a pattern. Return the numbers, or None."""
     if len(parts) != len(pattern):
         return None
 
@@ -86,7 +74,7 @@ def _not_found(page: ft.Page, route: str) -> ft.View:
 
 
 def _build(page: ft.Page, route: str) -> ft.View:
-    """Bati View la san okipe sèvis yo."""
+    """Build the View without worrying about the services."""
     if route in STATIC:
         return STATIC[route](page)
 
@@ -103,15 +91,6 @@ def _build(page: ft.Page, route: str) -> ft.View:
 
 
 def resolve(page: ft.Page, route: str) -> ft.View:
-    """Bay View ki koresponn ak `route`, ak sèvis yo atache sou li.
-
-    POUKISA sèvis la atache ISIT LA epi pa nan main.py:
-
-      Nan Flet 0.85, `page.services` se an reyalite `page.views[0].services`.
-      `main.py` fè `page.views.clear()` chak fwa wout la chanje, donk yon
-      sèvis ki kole sou premye View la ta mouri nan premye navigasyon an.
-      Lè nou atache l sou CHAK View, li toujou vivan kèlkeswa kote nou ye.
-    """
     view = _build(page, route)
     view.services = [settings_service.service()]
     return view

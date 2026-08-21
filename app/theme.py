@@ -204,20 +204,20 @@ BLACK = "#000000"               # Absolute black — shadows only, never a backg
 # running out of colors. Each entry is (banner, text-on-banner) and every pair
 # below is >= 5:1, so section text stays readable everywhere.
 SECTION_COLORS: list[tuple[str, str]] = [
-    ("#243D7D", "#FFFFFF"),     # 1 — navy (koulè mak la)        9.85:1
-    ("#1D4ED8", "#FFFFFF"),     # 2 — ble                        6.70:1
-    ("#0369A1", "#FFFFFF"),     # 3 — ble oseyan                 5.93:1
-    ("#0F766E", "#FFFFFF"),     # 4 — dlo vèt fonse              5.47:1
-    ("#B45309", "#FFFFFF"),     # 5 — dore fonse                 5.02:1
-    ("#C2410C", "#FFFFFF"),     # 6 — zoranj boukannen           5.18:1
+    ("#243D7D", "#FFFFFF"),     # 1 — navy (brand color)         9.85:1
+    ("#1D4ED8", "#FFFFFF"),     # 2 — blue                       6.70:1
+    ("#0369A1", "#FFFFFF"),     # 3 — ocean blue                 5.93:1
+    ("#0F766E", "#FFFFFF"),     # 4 — deep teal                  5.47:1
+    ("#B45309", "#FFFFFF"),     # 5 — dark gold                  5.02:1
+    ("#C2410C", "#FFFFFF"),     # 6 — burnt orange                5.18:1
 ]
 
 
 def section_color(index: int) -> tuple[str, str]:
-    """Koulè bandwòl yon seksyon: (fon, tèks).
+    """Banner color for a section: (background, text).
 
-    Endèks la anwole, donk seksyon 7 pran menm koulè ak seksyon 1.
-    Konsa ajoute yon seksyon pa janm mande yon nouvo koulè.
+    The index wraps around, so section 7 gets the same color as section 1.
+    That way adding a new section never needs a new color.
     """
     return SECTION_COLORS[index % len(SECTION_COLORS)]
 

@@ -2,10 +2,10 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Profile view — plas rezève.
+"""Profile view — placeholder.
 
-Pa nan UI handoff la ankò. Li egziste pou 4yèm tab NavigationBar la
-gen yon kote pou l ale.
+Not part of the UI handoff yet. It exists so the 4th NavigationBar tab
+has somewhere to go.
 """
 
 import flet as ft

@@ -2,41 +2,6 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Exercise view — BOUK LA.
-
-Wout: /exercise/{n}   (n = nimewo leson an)
-
-TWA DESIZYON KI FÈ EKRAN SA A
-
-  1. YON SÈL TAP. Peze yon chwa = ou reponn. Pa gen bouton «Verifye».
-     Duolingo mande de tap paske li gen egzèsis kote w konstwi yon
-     bagay; ak 4 chwa se yon tap gaspiye. Sa mache SÈLMAN paske pa gen
-     pinisyon — si yon move tap pa koute w anyen, konfimasyon initil.
-
-  2. ASIMETRI A — se kè ekran an.
-
-       Kòrèk    → li avanse POUKONT LI apre 550 ms. Ou pa peze anyen.
-       Pa kòrèk → li KANPE. Yon bandwòl monte, ou oblije peze.
-
-     Lè w ap byen fè, ou antre nan yon rit epi ou pa touche anyen lòt.
-     Lè w twonpe w, silans ki brize a se sa ki make moman an. Pinisyon
-     pa nesesè. Duolingo mande «Kontinye» chak fwa — nou pa dakò.
-
-  3. NOU PA REBATI EKRAN AN. Kontwòl yo kreye YON SÈL FWA; ant de
-     kesyon nou chanje `.value` ak `.bgcolor` yo sèlman. Si nou te refè
-     lis `controls` la, nou t ap wè yon klignotman epi nou t ap pèdi
-     animasyon yo. Se diferans ant yon bagay ki koule ak yon bagay ki
-     sakade.
-
-TOUT ANIMASYON YO SE «IMPLICIT»
-
-  `animate`, `animate_scale`, `animate_offset` — nou voye eta FINAL la
-  yon sèl fwa, epi Flutter fè 60 frame yo poukont li. Zewo trafik sou
-  bridge la pandan yo ap kouri. Se sa ki fè «juice» Duolingo a posib
-  nan Flet. Sa ki PA posib se yon animasyon Python kondwi frame pa
-  frame — pa janm ekri yon bouk `while` ak `time.sleep()` isit la.
-"""
-
 import asyncio
 
 import flet as ft
@@ -46,17 +11,17 @@ from data.lessons.all_lessons import get_lesson
 from models.session import Session
 
 REVEAL_DELAY = 0.55
-"""Konbyen segond yon bon repons rete afiche anvan kesyon annapre a."""
+"""How many seconds a correct answer stays shown before the next question."""
 
 
 def _progress_bar(fill: ft.Container) -> ft.Control:
-    """Ba pwogrè a — yon Stack ak yon ranplisaj ki grandi.
+    """The progress bar — a Stack with a fill that grows.
 
-    POUKISA `scale_x` EPI NON `width`
+    WHY `scale_x` AND NOT `width`
 
-      Pou anime yon lajè an piksèl, nou ta bezwen konnen lajè ekran an —
-      ki pa disponib nan moman nou bati View la. Yon `Scale` ankre agoch
-      travay ak nenpòt lajè, san nou pa mezire anyen.
+      To animate a width in pixels, we'd need to know the screen width —
+      which isn't available when we build the View. A `Scale` anchored to
+      the left works with any width, without us measuring anything.
     """
     return ft.Stack(
         height=10,
@@ -76,11 +41,11 @@ def exercise_view(page: ft.Page, lesson_number: int) -> ft.View:
 
     state = {
         "session": Session.for_lesson(lesson),
-        "locked": False,   # blòke tap yo pandan feedback la ap parèt
+        "locked": False,   # block taps while the feedback is showing
         "done": False,
     }
 
-    # ── Kontwòl ki viv pandan tout sesyon an ─────────────────
+    # ── Controls that live for the whole session ─────────────────
 
     progress_fill = ft.Container(
         left=0, right=0, top=0, bottom=0,
@@ -123,7 +88,7 @@ def exercise_view(page: ft.Page, lesson_number: int) -> ft.View:
             animate_scale=ft.Animation(duration=110,
                                        curve=ft.AnimationCurve.EASE_OUT),
             scale=1.0,
-            on_click=None,          # branche pi ba a
+            on_click=None,          # wired up below
         )
         return box, label
 
@@ -157,7 +122,7 @@ def exercise_view(page: ft.Page, lesson_number: int) -> ft.View:
         content=question,
     )
 
-    # ── Bandwòl feedback la (sèlman lè w twonpe w) ───────────
+    # ── The feedback sheet (only when you're wrong) ───────────
 
     def on_continue(e):
         advance()
@@ -165,7 +130,7 @@ def exercise_view(page: ft.Page, lesson_number: int) -> ft.View:
 
     feedback = ft.Container(
         left=0, right=0, bottom=0,
-        offset=ft.Offset(0, 1),          # kache anba ekran an
+        offset=ft.Offset(0, 1),          # hidden below the screen
         animate_offset=ft.Animation(duration=240,
                                     curve=ft.AnimationCurve.EASE_OUT),
         bgcolor=theme.SURFACE,
@@ -180,7 +145,7 @@ def exercise_view(page: ft.Page, lesson_number: int) -> ft.View:
                     vertical_alignment=ft.CrossAxisAlignment.CENTER,
                     controls=[
                         ft.Icon(ft.Icons.CLOSE, size=20, color=theme.ERROR),
-                        ft.Text("Bon repons lan se:", size=theme.SIZE_BODY,
+                        ft.Text("The correct answer is:", size=theme.SIZE_BODY,
                                 color=theme.TEXT_SECONDARY),
                     ],
                 ),
@@ -191,7 +156,7 @@ def exercise_view(page: ft.Page, lesson_number: int) -> ft.View:
                     padding=ft.Padding.symmetric(vertical=14),
                     alignment=ft.Alignment.CENTER,
                     on_click=on_continue,
-                    content=ft.Text("Kontinye", size=theme.SIZE_H3,
+                    content=ft.Text("Continue", size=theme.SIZE_H3,
                                     weight=ft.FontWeight.W_700,
                                     color=theme.WHITE),
                 ),
@@ -199,7 +164,7 @@ def exercise_view(page: ft.Page, lesson_number: int) -> ft.View:
         ),
     )
 
-    # ── Desine yon kesyon ────────────────────────────────────
+    # ── Paint (draw) a question ────────────────────────────────────
 
     def paint_question() -> None:
         session = state["session"]
@@ -236,10 +201,10 @@ def exercise_view(page: ft.Page, lesson_number: int) -> ft.View:
             else:
                 box.visible = False
 
-    # ── Fen sesyon an ────────────────────────────────────────
+    # ── End of session ────────────────────────────────────────
 
     def show_summary() -> None:
-        """Bouk la bezwen yon FEN — se la rekonpans lan ateri."""
+        """The loop needs an END — that's where the reward lands."""
         session = state["session"]
         state["done"] = True
         counter.value = ""
@@ -277,25 +242,25 @@ def exercise_view(page: ft.Page, lesson_number: int) -> ft.View:
             controls=[
                 ft.Icon(ft.Icons.CHECK_CIRCLE, size=84, color=theme.SUCCESS),
                 ft.Container(height=16),
-                ft.Text("Sesyon an fini!", size=theme.SIZE_TITLE,
+                ft.Text("Session complete!", size=theme.SIZE_TITLE,
                         weight=ft.FontWeight.W_700, color=theme.TEXT),
                 ft.Container(height=6),
-                ft.Text(f"{session.planned} egzèsis · {session.accuracy}% egzat",
+                ft.Text(f"{session.planned} exercises · {session.accuracy}% correct",
                         size=theme.SIZE_BODY, color=theme.TEXT_SECONDARY),
                 ft.Text(
-                    "San okenn erè" if not session.mistakes
-                    else f"{session.mistakes} erè — yo tout retounen",
+                    "No mistakes at all" if not session.mistakes
+                    else f"{session.mistakes} mistakes — every one came back",
                     size=theme.SIZE_SMALL, color=theme.TEXT_MUTED,
                 ),
                 ft.Container(height=28),
-                _button("Rekòmanse", theme.PRIMARY, theme.WHITE, restart),
+                _button("Start again", theme.PRIMARY, theme.WHITE, restart),
                 ft.Container(height=10),
-                _button("Tounen nan inite a", theme.SURFACE_VARIANT,
+                _button("Back to the unit", theme.SURFACE_VARIANT,
                         theme.TEXT, back),
             ],
         )
 
-    # ── Avanse ───────────────────────────────────────────────
+    # ── Advance ───────────────────────────────────────────────
 
     def advance() -> None:
         feedback.offset = ft.Offset(0, 1)
@@ -305,7 +270,7 @@ def exercise_view(page: ft.Page, lesson_number: int) -> ft.View:
         else:
             paint_question()
 
-    # ── Reponn ───────────────────────────────────────────────
+    # ── Answer ───────────────────────────────────────────────
 
     def make_pick(i: int):
         async def handler(e):
@@ -327,8 +292,8 @@ def exercise_view(page: ft.Page, lesson_number: int) -> ft.View:
                 label.color = theme.WHITE
                 page.update()
 
-                # Yon sèl atant, pa yon bouk — sa pa gen anyen pou wè
-                # ak yon animasyon Python kondwi.
+                # A single wait, not a loop — this has nothing to do
+                # with a Python-driven animation.
                 await asyncio.sleep(REVEAL_DELAY)
                 advance()
                 page.update()
@@ -337,8 +302,8 @@ def exercise_view(page: ft.Page, lesson_number: int) -> ft.View:
                 box.border = ft.Border.all(2, theme.ERROR)
                 label.color = theme.WHITE
 
-                # Montre bon repons lan an menm tan — pa janm kite moun
-                # nan ap chèche.
+                # Show the correct answer right away — never leave the
+                # user searching for it.
                 for j, (other_box, _) in enumerate(options):
                     if (j < len(exercise.options)
                             and exercise.options[j] == exercise.answer):
@@ -356,7 +321,7 @@ def exercise_view(page: ft.Page, lesson_number: int) -> ft.View:
     for i, (box, _) in enumerate(options):
         box.on_click = make_pick(i)
 
-    # ── Ekran an ─────────────────────────────────────────────
+    # ── The screen ─────────────────────────────────────────────
 
     async def quit_session(e):
         await page.push_route(f"/unit/{lesson_number}")
@@ -388,10 +353,10 @@ def exercise_view(page: ft.Page, lesson_number: int) -> ft.View:
             spacing=10,
             controls=[
                 ft.Icon(ft.Icons.EDIT_NOTE, size=64, color=theme.TEXT_MUTED),
-                ft.Text("Leson sa a poko gen ase kontni",
+                ft.Text("This lesson does not have enough content yet",
                         size=theme.SIZE_H2, weight=ft.FontWeight.W_600,
                         color=theme.TEXT),
-                ft.Text("Ekri vokabilè a epi egzèsis yo ap parèt poukont yo.",
+                ft.Text("Write the vocabulary and the exercises appear on their own.",
                         size=theme.SIZE_BODY, color=theme.TEXT_MUTED,
                         text_align=ft.TextAlign.CENTER),
             ],

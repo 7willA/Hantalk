@@ -2,22 +2,22 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Path banner — kat koulè ki anonse yon seksyon oswa yon inite.
+"""Path banner — a colored card that announces a section or unit.
 
-Se lide ki pi entelijan nan ekran Duolingo yo: chak bandwòl gen pwòp
-koulè li, donk chak seksyon jwenn yon idantite san yo pa desine okenn
-imaj. Hantalk pa gen ilistrasyon ni maskòt — koulè ak tipografi se tout
-sa nou genyen, epi sa ase.
+This is the same smart idea used in Duolingo screens: each banner has
+its own color, so each section gets its own identity without drawing
+any image. Hantalk has no illustrations or mascot — color and
+typography are all we have, and that is enough.
 
-Estrikti a:
+The layout:
 
     ┌──────────────────────────────────┬────┐
-    │ SEKSYON 1 · DEBITAN              │    │   ← ti majiskil etenn
-    │ 基礎一                            │ ⓘ  │   ← tit an chinwa
-    │ Foundations 1                    │    │   ← tit an anglè
+    │ SECTION 1 · BEGINNER             │    │   ← small caps label
+    │ 基礎一                            │ ⓘ  │   ← title in Chinese
+    │ Foundations 1                    │    │   ← title in English
     └──────────────────────────────────┴────┘
                                         ↑
-                            bouton gid la (opsyonèl)
+                        guide button (optional)
 """
 
 import flet as ft
@@ -35,10 +35,11 @@ def path_banner(
     action_icon: str = ft.Icons.LIST_ALT,
     progress: str = "",
 ) -> ft.Control:
-    """Bandwòl plen lajè.
+    """Full-width banner.
 
-    `fg` se koulè tèks la SOU `bg`. Pè yo soti nan `theme.section_color()`,
-    ki garanti omwen 4.5:1 — donk nou pa janm bezwen devine isit la.
+    `fg` is the text color used ON `bg`. The pair comes from
+    `theme.section_color()`, which guarantees at least 4.5:1 contrast —
+    so we never need to guess it here.
     """
     head: list[ft.Control] = [
         ft.Text(kicker, size=theme.SIZE_LABEL, weight=ft.FontWeight.W_700,

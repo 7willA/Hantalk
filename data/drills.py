@@ -2,11 +2,11 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Done drill pou ekran 06.
+"""Drill data for screen 06.
 
-Chak drill gen yon koub ton — yon lis pwen (x, y) nan yon gri 120 × 34
-kote y=0 se anlè epi y=34 anba. `phonetic_view` pa itilize sa; se
-`drills_view` ki desine yo sou yon ft.Canvas.
+Each drill has a tone curve — a list of (x, y) points on a 120 × 34
+grid where y=0 is top and y=34 is bottom. `phonetic_view` doesn't use this;
+it's `drills_view` that draws them on an ft.Canvas.
 """
 
 from dataclasses import dataclass, field
@@ -80,4 +80,4 @@ def get_drill(key: str) -> Drill:
     for d in DRILLS:
         if d.key == key:
             return d
-    raise KeyError(f"Pa gen drill {key}")
+    raise KeyError(f"No drill {key}")

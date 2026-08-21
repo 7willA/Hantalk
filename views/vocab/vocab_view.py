@@ -2,9 +2,9 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Vocab view — ekran 04 nan handoff la.
+"""Vocab view — screen 04 in the handoff.
 
-Flashcards: ba pwogrè an segman, kat ki flip, Review / Know it.
+Flashcards: segmented progress bar, flipping cards, Review / Know it.
 """
 
 import flet as ft
@@ -63,7 +63,7 @@ def vocab_view(page: ft.Page, lesson_number: int) -> ft.View:
         return handler
 
     def on_swipe(e: ft.DragEndEvent):
-        # velocity negatif = dwat-a-goch = kat swivan
+        # negative velocity = right-to-left = next card
         vx = e.primary_velocity or 0
         if vx < -100:
             step(1)

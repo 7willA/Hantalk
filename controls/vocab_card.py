@@ -2,7 +2,7 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Vocab card control — flashcard pou ekran 04.
+"""Vocab card control — flashcard for screen 04.
 
 Flutter counterpart: lib/widgets/vocab_card.dart
 """
@@ -14,9 +14,9 @@ from models.vocabulary_entry import VocabularyEntry
 
 
 def vocab_card(entry: VocabularyEntry, revealed: bool = True) -> ft.Control:
-    """Flashcard blan ak karaktè a gwo epi egzanp lan anba.
+    """White flashcard with the character shown large and an example below.
 
-    revealed -- False montre karaktè a sèlman (bò kesyon an).
+    revealed -- False shows only the character (the question side).
     """
     back = [
         ft.Container(height=20),

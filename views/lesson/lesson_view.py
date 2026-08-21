@@ -2,9 +2,9 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Lesson view — ekran 02 nan handoff la.
+"""Lesson view — screen 02 in the handoff.
 
-5 tab: Dialogue · Vocab · Syntax · Activities · Notes.
+5 tabs: Dialogue · Vocab · Syntax · Activities · Notes.
 Flutter counterpart: lib/screens/lesson/lesson_screen.dart
 """
 
@@ -89,7 +89,7 @@ def _chip(text: str) -> ft.Control:
 
 def _bubble(page: ft.Page, line: DialogueLine, index: int,
             lesson_number: int) -> ft.Control:
-    """Yon bul chat. Tap → ekran fonetik la."""
+    """A chat bubble. Tap → the phonetic screen."""
     async def open_phonetic(e):
         await page.push_route(f"/phonetic/{lesson_number}/{index}")
 
@@ -151,7 +151,7 @@ def _bubble(page: ft.Page, line: DialogueLine, index: int,
 def _tab_dialogue(page: ft.Page, lesson: Lesson) -> ft.Control:
     d = lesson.dialogue
     if d is None:
-        return ft.Text("Pa gen dyalòg pou leson sa a.",
+        return ft.Text("No dialogue for this lesson yet.",
                        color=theme.TEXT_MUTED)
 
     return ft.Column(
@@ -336,7 +336,7 @@ def lesson_view(page: ft.Page, number: int) -> ft.View:
     lesson = get_lesson(number)
 
     def wrap(control: ft.Control) -> ft.Control:
-        """Chak tab defile poukont li."""
+        """Each tab scrolls on its own."""
         return ft.Container(
             padding=ft.Padding.only(left=20, right=20, top=18, bottom=24),
             content=ft.Column(
@@ -358,7 +358,7 @@ def lesson_view(page: ft.Page, number: int) -> ft.View:
         _tab_notes(lesson),
     ]
 
-    # Flet 0.85: Tabs se yon konteni; TabBar = tit yo, TabBarView = paj yo.
+    # Flet 0.85: Tabs is a container; TabBar = the titles, TabBarView = the pages.
     tabs = ft.Tabs(
         length=len(labels),
         selected_index=0,

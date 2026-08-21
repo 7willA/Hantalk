@@ -2,9 +2,9 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Phonetic view — ekran 03 nan handoff la.
+"""Phonetic view — screen 03 in the handoff.
 
-4 sistèm fonetik ki toggle-able + yon pleyè odyo (demo, san son).
+4 toggle-able phonetic systems + an audio player (demo, no sound).
 """
 
 import flet as ft
@@ -21,7 +21,7 @@ def phonetic_view(page: ft.Page, lesson_number: int, line_index: int) -> ft.View
     line_index = max(0, min(line_index, len(lines) - 1))
     line = lines[line_index]
 
-    # Eta lokal ekran an — ki sistèm ki vizib, ak eta pleyè a.
+    # Local screen state — which systems are visible, and the player state.
     state = {
         "trad": True,
         "pin": True,

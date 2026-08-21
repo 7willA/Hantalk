@@ -2,27 +2,27 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Path node — yon sib sou chemen an.
+"""Path node — a dot on the path.
 
-Sèvi de kote:
-  - Home        → chak nœud se yon INITE (li montre nimewo inite a)
-  - Unit screen → chak nœud se yon AKTIVITE (li montre yon ikon)
+Used in two places:
+  - Home        → each node is a UNIT (it shows the unit number)
+  - Unit screen → each node is an ACTIVITY (it shows an icon)
 
-TWA ETA
+THREE STATES
 
-  DONE    plen ak koulè seksyon an, ak yon ✓
-  ACTIVE  plen, PI GWO, ak yon bag alantou — se li ki rele je a
-  LOCKED  gri plat, ikon etenn
+  DONE    filled with the section color, with a checkmark
+  ACTIVE  filled, BIGGER, with a ring around it — this is what draws the eye
+  LOCKED  flat gray, dim icon
 
-ZIGZAG LA
+THE ZIGZAG
 
-  `node_offset()` se sèl kote pozisyon orizontal la kalkile. Jodi a li
-  bay yon zigzag senp. Lè nou vle chemen koube Duolingo a, se sèl
-  fonksyon sa a ak yon `ft.canvas` pou liy lan ki chanje — okenn ekran
-  pa bezwen konnen.
+  `node_offset()` is the only place the horizontal position is
+  calculated. Today it gives a simple zigzag. When we want the curved
+  Duolingo-style path, only this function and an `ft.canvas` for the
+  connecting line need to change — no screen needs to know.
 
-  Nou sèvi ak marge POZITIF sèlman (goch OSWA dwat), paske marge negatif
-  pa fyab nan Flet.
+  We only use POSITIVE margins (left OR right), because negative
+  margins are not reliable in Flet.
 """
 
 import flet as ft
@@ -30,32 +30,32 @@ import flet as ft
 from app import theme
 from models.activity import ActivityKind, ActivityState
 
-# Ikon pou chak kalite aktivite. Yo viv isit la, pa nan `models/`,
-# paske yon ikon se yon desizyon afichaj.
+# Icon for each activity type. They live here, not in `models/`,
+# because an icon is a display decision.
 KIND_ICONS: dict[ActivityKind, str] = {
-    ActivityKind.DYALOG: ft.Icons.FORUM,
-    ActivityKind.VOKABILE: ft.Icons.STYLE,
-    ActivityKind.EGZESIS: ft.Icons.CHECK_CIRCLE_OUTLINE,
-    ActivityKind.FONETIK: ft.Icons.TRANSLATE,
-    ActivityKind.TON: ft.Icons.GRAPHIC_EQ,
+    ActivityKind.DIALOGUE: ft.Icons.FORUM,
+    ActivityKind.VOCABULARY: ft.Icons.STYLE,
+    ActivityKind.EXERCISES: ft.Icons.CHECK_CIRCLE_OUTLINE,
+    ActivityKind.PHONETICS: ft.Icons.TRANSLATE,
+    ActivityKind.TONES: ft.Icons.GRAPHIC_EQ,
     ActivityKind.AI: ft.Icons.MIC,
 }
 
 SIZE_ACTIVE = 84
 SIZE_NORMAL = 68
 
-# Pwofil zigzag la. Li anwole, donk li mache ak nenpòt kantite nœud.
-# Valè pozitif = pouse adwat, negatif = pouse agoch, an piksèl.
+# The zigzag pattern. It loops, so it works with any number of nodes.
+# Positive value = push right, negative = push left, in pixels.
 _ZIGZAG = (0, 52, 74, 52, 0, -52, -74, -52)
 
 
 def node_offset(index: int) -> int:
-    """Dekalaj orizontal nœud nimewo `index` la."""
+    """Horizontal offset for node number `index`."""
     return _ZIGZAG[index % len(_ZIGZAG)]
 
 
 def _circle(state: ActivityState, color: str, inner: ft.Control) -> ft.Control:
-    """Sib la — gwosè ak koulè li chanje dapre eta a."""
+    """The dot — its size and color change based on the state."""
     active = state is ActivityState.ACTIVE
     locked = state is ActivityState.LOCKED
     size = SIZE_ACTIVE if active else SIZE_NORMAL
@@ -72,7 +72,7 @@ def _circle(state: ActivityState, color: str, inner: ft.Control) -> ft.Control:
     if not active:
         return circle
 
-    # Bag la: yon dezyèm sèk pi gwo dèyè premye a.
+    # The ring: a second, bigger circle behind the first one.
     return ft.Container(
         width=size + 14,
         height=size + 14,
@@ -85,7 +85,7 @@ def _circle(state: ActivityState, color: str, inner: ft.Control) -> ft.Control:
 
 def _inner(state: ActivityState, on_color: str, icon: str | None,
            text: str | None) -> ft.Control:
-    """Sa ki anndan sib la: ✓ si fini, sinon ikon oswa nimewo."""
+    """What's inside the dot: a checkmark if done, otherwise an icon or number."""
     locked = state is ActivityState.LOCKED
     fg = theme.TEXT_MUTED if locked else on_color
 
@@ -107,12 +107,13 @@ def path_node(
     text: str | None = None,
     sublabel: str = "",
 ) -> ft.Control:
-    """Yon nœud konplè: sib la + tit la anba li, dekale sou chemen an."""
+    """A full node: the dot + its label below it, offset along the path."""
     locked = state is ActivityState.LOCKED
 
-    # NÒT: yon nœud bloke RETE tap-able. Se ekran an ki deside sa pou
-    # montre — jeneralman `locked_callout()` ki esplike poukisa li bloke.
-    # Yon sèk ki pa reponn ditou fè moun panse app la kase.
+    # NOTE: a locked node STAYS tap-able. It's up to the screen to
+    # decide what to show — usually `locked_callout()`, which explains
+    # why it's locked. A circle that doesn't respond at all makes
+    # people think the app is broken.
     node = ft.Container(
         on_click=on_click,
         content=ft.Column(

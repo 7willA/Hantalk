@@ -2,42 +2,17 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Validators — règ ki pataje ant ekran auth yo.
-
-POUKISA YON SÈL FICHYE
-
-  Twa ekran mande menm bagay la: /login, /register, /forgot. Si chak
-  youn gen pwòp regex li, yon jou youn ap aksepte yon nimewo telefòn
-  lòt la ap rejte — epi moun nan p ap ka konekte ak kont li fèk kreye.
-  Yon sèl sous verite anpeche sa.
-
-LOGIK "EMAIL, TELEFÒN, OSWA NON ITILIZATÈ"
-
-  Sou /login nou pa mande moun nan ki kalite idantifyan l ap tape — nou
-  DEVINE l ak fòm nan:
-
-      gen yon "@"                  → email
-      chif sèlman (+ - ( ) espas)  → telefòn
-      rès la                       → non itilizatè
-
-  Lòd la enpòtan. Si nou te teste non itilizatè an premye, "0912345678"
-  ta pase pou yon non itilizatè epi backend la ta chèche nan move kolòn.
-
-  `identifier_kind()` bay kalite a, `normalize_identifier()` netwaye l
-  pou backend la (email an miniskil, telefòn san espas, elatriye).
-"""
-
 import re
 
-# Volontèman lach. Regex RFC 5322 strik yo rejte adrès ki valab epi yo
-# pa ka pwouve yon bwat lèt egziste — se sèlman yon email konfimasyon.
+# Intentionally loose. Strict RFC 5322 regexes reject valid addresses
+# and can't prove a mailbox exists anyway — only a confirmation email can.
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$")
 
-# Tout sa yon moun ka tape ant chif yo nan yon nimewo telefòn.
+# Anything a person might type between the digits of a phone number.
 PHONE_NOISE = re.compile(r"[\s\-().]")
-PHONE_RE = re.compile(r"^\+?\d{7,15}$")     # E.164 rive jiska 15 chif
+PHONE_RE = re.compile(r"^\+?\d{7,15}$")     # E.164 up to 15 digits
 
-# Kòmanse ak yon lèt, apre sa lèt/chif/. /_ — 3 a 20 karaktè antou.
+# Starts with a letter, then letters/digits/./_ — 3 to 20 characters total.
 USERNAME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9._]{2,19}$")
 
 MIN_NAME = 2
@@ -48,10 +23,10 @@ PHONE = "phone"
 USERNAME = "username"
 
 
-# ── Rekonèt yon idantifyan ─────────────────────────────────
+# ── Recognize an identifier ─────────────────────────────────
 
 def identifier_kind(value: str) -> str:
-    """Ki kalite idantifyan sa a ye? Gade docstring modil la pou lòd la."""
+    """What kind of identifier is this? See the module docstring for the order."""
     value = value.strip()
     if "@" in value:
         return EMAIL
@@ -62,7 +37,7 @@ def identifier_kind(value: str) -> str:
 
 
 def normalize_identifier(value: str) -> str:
-    """Fòm nou voye bay backend la — pa fòm nan moun nan te tape a."""
+    """The form we send to the backend — not the form the person typed."""
     value = value.strip()
     kind = identifier_kind(value)
     if kind == EMAIL:
@@ -73,7 +48,7 @@ def normalize_identifier(value: str) -> str:
 
 
 def identifier_error(value: str) -> str | None:
-    """Valide yon idantifyan koneksyon — email, telefòn, OSWA non itilizatè."""
+    """Validate a login identifier — email, phone, OR username."""
     value = value.strip()
     kind = identifier_kind(value)
     if kind == EMAIL:
@@ -88,10 +63,10 @@ def identifier_error(value: str) -> str | None:
 
 
 def contact_error(value: str) -> str | None:
-    """Menm bagay la, MEN san non itilizatè — pou /register ak /forgot.
+    """Same thing, BUT without username — for /register and /forgot.
 
-    Nou pa ka voye yon lyen reyinisyalizasyon sou yon non itilizatè:
-    fòk gen yon bwat lèt oswa yon nimewo dèyè l.
+    We can't send a reset link to a username: there has to be a
+    mailbox or a phone number behind it.
     """
     value = value.strip()
     if identifier_kind(value) == EMAIL:
@@ -101,7 +76,7 @@ def contact_error(value: str) -> str | None:
     return "Enter a valid email or phone number"
 
 
-# ── Lòt chan yo ────────────────────────────────────────────
+# ── Other fields ────────────────────────────────────────────
 
 def name_error(value: str) -> str | None:
     if len(value.strip()) < MIN_NAME:
@@ -124,12 +99,7 @@ def confirm_error(pw: str, confirm: str) -> str | None:
 
 
 def strength(pw: str) -> tuple[int, str]:
-    """Bay yon nòt 0–4 ak yon etikèt. Se yon KONSÈY, pa yon baryè.
 
-    Sèl règ ki di yo se longè a ak melanj lèt+chif nan `password_error`.
-    Vi a retounen etikèt la sèlman — se ekran an ki chwazi koulè a, pou
-    modil sa a pa depann de `app.theme`.
-    """
     if not pw:
         return 0, ""
 

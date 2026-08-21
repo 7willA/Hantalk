@@ -2,20 +2,6 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Tout 12 leson Hantalk yo, nan lòd.
-
-Pwogresyon gramatikal la swiv yon kourikoulòm klasik pou debitan
-(estrikti pa estrikti). Tit ak kontni yo se materyèl orijinal Hantalk.
-
-ETA KOUNYE A
-------------
-Leson 1 ak 2 gen kontni reyèl (dyalòg, vokabilè, pattern, nòt kiltirèl).
-Leson 3 rive 12 gen sèlman tit yo. `fill_demo_content()` prete kontni
-leson 1/2 pou yo, konsa tout ekran yo gen kichòy pou montre pandan demo a.
-Lè w ekri vre kontni yon leson, retire l nan prete a — sa a otomatik:
-si `lesson.dialogue` pa `None`, fonksyon an pa manyen l.
-"""
-
 import copy
 
 from data.lessons.lesson_01 import LESSON_01
@@ -24,44 +10,44 @@ from models.lesson import Lesson
 from models.section import Section
 
 ALL_LESSONS = [
-    # 01 — 叫 / 是, kesyon ak 嗎 ak 呢
+    # 01 — 叫 / 是, questions with 嗎 and 呢
     LESSON_01,
-    # 02 — salitasyon, 很 + adjektif, 也
+    # 02 — greetings, 很 + adjective, 也
     LESSON_02,
-    # 03 — 喜歡 + vèb, negasyon ak 不
+    # 03 — 喜歡 + verb, negation with 不
     Lesson(3, "我喜歡聽台語歌", "I Like Listening to Taiwanese Songs"),
-    # 04 — mo mezi, pri, 這 / 那
+    # 04 — measure words, price, 這 / 那
     Lesson(4, "這件衣服多少錢？", "How Much Is This Shirt?"),
-    # 05 — 有 / 沒有, 幾, fanmi
+    # 05 — 有 / 沒有, 幾, family
     Lesson(5, "我有兩個姐姐", "I Have Two Older Sisters", is_locked=True),
-    # 06 — 想, 的 kòm nominalizè
+    # 06 — 想, 的 as nominalizer
     Lesson(6, "我想買一杯珍奶", "I Want to Buy a Bubble Tea",
            is_locked=True),
-    # 07 — konpleman degre ak 得
+    # 07 — degree complement with 得
     Lesson(7, "你的中文說得很好", "Your Chinese Sounds Really Good",
            is_locked=True),
-    # 08 — pwopozisyon relatif ak 的
+    # 08 — relative clause with 的
     Lesson(8, "這是我昨天買的手機", "This Is the Phone I Bought Yesterday",
            is_locked=True),
-    # 09 — 在, mo kote
+    # 09 — 在, location words
     Lesson(9, "你家在哪裡？", "Where Is Your Home?", is_locked=True),
-    # 10 — 到 … 去 + 了 (aksyon fini)
+    # 10 — 到 … 去 + 了 (completed action)
     Lesson(10, "我到台南去了", "I Went to Tainan", is_locked=True),
-    # 11 — ekspresyon lè, 幾點
+    # 11 — time expressions, 幾點
     Lesson(11, "你幾點下班？", "What Time Do You Get Off Work?",
            is_locked=True),
-    # 12 — dire ak 了
+    # 12 — duration with 了
     Lesson(12, "我在台灣住了三年", "I Lived in Taiwan for Three Years",
            is_locked=True),
 ]
 
 
 def fill_demo_content(lessons: list[Lesson]) -> None:
-    """Prete kontni leson 1/2 pou leson ki poko gen pa yo.
+    """Borrow content from lessons 1/2 for lessons that don't have their own yet.
 
-    `copy.deepcopy` enpòtan: san li, tout leson yo ta pataje MENM objè
-    dyalòg la, epi chanje youn ta chanje tout — menm pyèj ak yon lis
-    ki sèvi kòm valè pa defo.
+    `copy.deepcopy` matters here: without it, all lessons would share the SAME
+    dialogue object, and changing one would change them all — the same trap
+    as using a list as a default value.
     """
     sources = [LESSON_01, LESSON_02]
 
@@ -82,24 +68,24 @@ fill_demo_content(ALL_LESSONS)
 
 
 # ══════════════════════════════════════════════════════════
-# SEKSYON — Section → Unit (= Lesson) → Activity
+# SECTIONS — Section → Unit (= Lesson) → Activity
 # ══════════════════════════════════════════════════════════
 #
-# POU AJOUTE YON SEKSYON, se yon sèl bagay pou fè: ajoute yon `Section`
-# nan lis la anba a epi mete nimewo leson li yo. Pa gen kòd pou touche.
-# `color_index` anwole sou palèt la nan `app/theme.py`, donk ou pa janm
-# bloke paske w manke koulè — menm ak 30 seksyon.
+# TO ADD A SECTION, there's just one thing to do: add a `Section`
+# to the list below and set its lesson numbers. No code to touch.
+# `color_index` wraps around the palette in `app/theme.py`, so you never
+# run out of colors — even with 30 sections.
 #
-# REGLEMAN: chak leson dwe parèt nan EGZAKTEMAN yon sèl seksyon.
-# `_check_sections()` anba a verifye sa nan chak demaraj.
+# RULE: every lesson must appear in EXACTLY one section.
+# `_check_sections()` below verifies this on every startup.
 
 ALL_SECTIONS = [
     Section(
         number=1,
         traditional="基礎一",
         english="Foundations 1",
-        level="Debitan",
-        description="Di non ou, salye moun, epi mande konbyen yon bagay koute.",
+        level="Beginner",
+        description="Say your name, greet people, and ask how much something costs.",
         lesson_numbers=[1, 2, 3, 4],
         color_index=0,
     ),
@@ -107,8 +93,8 @@ ALL_SECTIONS = [
         number=2,
         traditional="基礎二",
         english="Foundations 2",
-        level="Debitan",
-        description="Pale de fanmi ou, sa ou vle, epi dekri kijan yon moun fè yon bagay.",
+        level="Beginner",
+        description="Talk about your family, what you want, and describe how someone does something.",
         lesson_numbers=[5, 6, 7, 8],
         color_index=1,
     ),
@@ -116,8 +102,8 @@ ALL_SECTIONS = [
         number=3,
         traditional="日常生活",
         english="Everyday Life",
-        level="Entèmedyè",
-        description="Kote, lè, ak sa ki deja pase — rakonte jounen ou.",
+        level="Intermediate",
+        description="Where, when, and what already happened — talk about your day.",
         lesson_numbers=[9, 10, 11, 12],
         color_index=2,
     ),
@@ -125,10 +111,11 @@ ALL_SECTIONS = [
 
 
 def _apply_sections() -> None:
-    """Mete `section_number` sou chak leson depi ALL_SECTIONS.
+    """Set `section_number` on every lesson from ALL_SECTIONS.
 
-    Seksyon yo se sous verite a. Leson an jis pote yon kopi nimewo a
-    pou rechèch rapid — konsa nou pa ka gen de reyalite ki pa dakò.
+    The sections are the source of truth. The lesson just carries a copy
+    of the number for quick lookup — so we can't end up with two facts
+    that disagree.
     """
     for section in ALL_SECTIONS:
         for number in section.lesson_numbers:
@@ -139,33 +126,33 @@ def _apply_sections() -> None:
 
 
 def _check_sections() -> None:
-    """Verifye chak leson nan yon sèl seksyon, epi okenn pa bliye.
+    """Check that every lesson is in exactly one section, and none is missing.
 
-    Nou fè tès la nan demaraj paske se yon erè ki fasil pou fè lè w ap
-    ajoute seksyon (kopye yon liy epi bliye chanje nimewo yo), epi li
-    ta parèt kòm yon inite ki disparèt sou Home — difisil pou konprann.
+    We run this check on startup because it's an easy mistake to make when
+    adding sections (copying a line and forgetting to change the numbers),
+    and it would show up as a unit disappearing from Home — hard to figure out.
     """
     seen: dict[int, int] = {}
     for section in ALL_SECTIONS:
         for number in section.lesson_numbers:
             if number in seen:
                 raise ValueError(
-                    f"Leson {number} nan seksyon {seen[number]} AK "
-                    f"seksyon {section.number}. Li dwe nan yon sèl."
+                    f"Lesson {number} is in section {seen[number]} AND "
+                    f"section {section.number}. It must be in exactly one."
                 )
             seen[number] = section.number
 
     missing = [l.number for l in ALL_LESSONS if l.number not in seen]
     if missing:
         raise ValueError(
-            f"Leson sa yo pa nan okenn seksyon: {missing}. "
-            f"Ajoute yo nan yon Section nan ALL_SECTIONS."
+            f"These lessons aren't in any section: {missing}. "
+            f"Add them to a Section in ALL_SECTIONS."
         )
 
     unknown = [n for n in seen if not any(l.number == n for l in ALL_LESSONS)]
     if unknown:
         raise ValueError(
-            f"ALL_SECTIONS pale de leson ki pa egziste: {unknown}."
+            f"ALL_SECTIONS references lessons that don't exist: {unknown}."
         )
 
 
@@ -173,40 +160,40 @@ _apply_sections()
 _check_sections()
 
 
-# ── Rechèch ────────────────────────────────────────────────
+# ── Lookup ────────────────────────────────────────────────
 
 LESSONS_BY_NUMBER: dict[int, Lesson] = {l.number: l for l in ALL_LESSONS}
 
 
 def get_lesson(number: int) -> Lesson:
-    """Jwenn yon leson pa nimewo li. Leve KeyError si l pa egziste."""
+    """Get a lesson by its number. Raises KeyError if it doesn't exist."""
     lesson = LESSONS_BY_NUMBER.get(number)
     if lesson is None:
-        raise KeyError(f"Pa gen leson {number}")
+        raise KeyError(f"No lesson {number}")
     return lesson
 
 
 def get_section(number: int) -> Section:
-    """Jwenn yon seksyon pa nimewo li."""
+    """Get a section by its number."""
     for section in ALL_SECTIONS:
         if section.number == number:
             return section
-    raise KeyError(f"Pa gen seksyon {number}")
+    raise KeyError(f"No section {number}")
 
 
 def section_lessons(section: Section) -> list[Lesson]:
-    """Inite yon seksyon, nan lòd."""
+    """A section's units, in order."""
     return [LESSONS_BY_NUMBER[n] for n in section.lesson_numbers
             if n in LESSONS_BY_NUMBER]
 
 
 def section_of(lesson: Lesson) -> Section:
-    """Ki seksyon yon inite fè pati."""
+    """Which section a unit belongs to."""
     return get_section(lesson.section_number)
 
 
 def current_lesson() -> Lesson:
-    """Premye inite ki poko fini epi ki pa bloke — sa 'Kontinye' louvri."""
+    """First unit that isn't finished and isn't locked — what 'Continue' opens."""
     for lesson in ALL_LESSONS:
         if not lesson.is_locked and lesson.progress < 1.0:
             return lesson

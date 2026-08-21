@@ -2,80 +2,78 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Exercise model — yon sèl kesyon nan bouk la.
 
-Flutter counterpart: pa gen — se yon nivo nouvo.
-
-YON SÈL KLAS, PA YON KLAS PA KALITE
-
-  Tout egzèsis yo gen menm fòm: yon kesyon, yon bon repons, kèk chwa.
-  Sa ki chanje se KI KOTE tèks la soti ak KI FONT ki sèvi. Donk yon sèl
-  `Exercise` ak yon `kind`, epi ekran an gade `kind` la.
-
-  Si nou te fè yon klas pa kalite, ekran an ta bezwen yon `isinstance()`
-  pou chak — epi ajoute yon kalite ta vle di touche ekran an. Konsa, li
-  pa touche anyen.
-
-SA KI PA NAN FICHYE SA A
-
-  Pa gen jenerasyon isit la (gade `services/exercise_generator.py`) ni
-  eta sesyon an (gade `models/session.py`). Yon `Exercise` pa konnen si
-  li reponn oswa non — se `Session` ki sonje sa.
-"""
 
 from dataclasses import dataclass, field
 from enum import Enum
 
 
 class ExerciseKind(str, Enum):
-    """Kalite kesyon. Valè a se yon tèks pou nou ka sove l pi ta."""
+    """Question kind. The value is text so we can save it later."""
 
-    REKONET = "rekonet"
-    """名字 → «name». Wè karaktè a, jwenn sans lan."""
+    RECOGNIZE = "recognize"
+    """名字 → «name». See the character, find the meaning."""
 
-    SONJE = "sonje"
-    """«name» → 名字. Sans lan bay, jwenn karaktè a. Pi difisil."""
+    RECALL = "recall"
+    """«name» → 名字. Meaning given, find the character. Harder."""
 
     PINYIN = "pinyin"
-    """名字 → míngzi. Move chwa yo se MENM silab ak MOVE TON.
+    """名字 → míngzi. Distractors are the SAME syllable with the WRONG TONE.
 
-    Se egzèsis ton ki mache SAN mikwo. Duolingo pa fè sa.
+    This is a tone exercise that works WITHOUT a microphone. Duolingo
+    doesn't do this.
     """
 
-    TRADWI = "tradwi"
-    """你叫什麼名字？ → «What's your name?». Yon fraz antye."""
+    TRANSLATE = "translate"
+    """你叫什麼名字？ → «What's your name?». A whole sentence."""
 
-    REPONN = "reponn"
-    """安安 di yon bagay → ki sa 凱文 reponn.
+    REPLY = "reply"
+    """安安 says something → what 凱文 replies.
 
-    Liy dyalòg yo deja nan lòd, donk liy N+1 la SE bon repons lan pou
-    liy N. Nou pa ekri anyen — konvèsasyon an bay egzèsis la poukont li.
+    Dialogue lines are already in order, so line N+1 IS the correct
+    answer for line N. We don't write anything — the conversation
+    produces the exercise on its own.
+    """
+
+    BUILD = "build"
+    """你會說中文嗎？ → [Can] [you] [speak] [Chinese]
+
+    Build the sentence with word tiles — the most recognizable
+    interaction of this kind.
+
+    IT DOESN'T NEED A NEW SHAPE. `answer` is the whole sentence;
+    `options` are the words, shuffled, plus a few extra words that
+    don't belong. The screen joins the words the person taps with a
+    space and sends the result to `Session.answer()` just like any
+    other kind. That's why `reshuffled()` works here too: it reshuffles
+    the word bank.
     """
 
 
 @dataclass(frozen=True)
 class KindMeta:
-    """Sa ekran an bezwen konnen pou l desine yon kalite."""
+    """What the screen needs to know to draw a kind."""
 
     instruction: str
-    """Ti fraz ki chita anwo kesyon an."""
+    """Short phrase that sits above the question."""
 
     prompt_zh: bool
-    """Èske kesyon an an chinwa? (chwazi font lan)"""
+    """Is the question in Chinese? (picks the font)"""
 
     options_zh: bool
-    """Èske chwa yo an chinwa?"""
+    """Are the choices in Chinese?"""
 
     prompt_size: int
-    """Gwosè tèks kesyon an. Chinwa bezwen pi gwo pase laten."""
+    """Size of the question text. Chinese needs to be bigger than Latin."""
 
 
 KIND_META: dict[ExerciseKind, KindMeta] = {
-    ExerciseKind.REKONET: KindMeta("Kisa sa vle di?", True, False, 44),
-    ExerciseKind.SONJE: KindMeta("Chwazi bon karaktè a", False, True, 26),
-    ExerciseKind.PINYIN: KindMeta("Ki pinyin ki kòrèk?", True, False, 44),
-    ExerciseKind.TRADWI: KindMeta("Tradui fraz sa a", True, False, 28),
-    ExerciseKind.REPONN: KindMeta("Ki sa ou ta reponn?", True, True, 26),
+    ExerciseKind.RECOGNIZE: KindMeta("What does this mean?", True, False, 44),
+    ExerciseKind.RECALL: KindMeta("Choose the correct character", False, True, 26),
+    ExerciseKind.PINYIN: KindMeta("Which pinyin is correct?", True, False, 44),
+    ExerciseKind.TRANSLATE: KindMeta("Translate this sentence", True, False, 28),
+    ExerciseKind.REPLY: KindMeta("What would you reply?", True, True, 26),
+    ExerciseKind.BUILD: KindMeta("Build the sentence with the words", True, False, 26),
 }
 
 
@@ -84,22 +82,22 @@ class Exercise:
     kind: ExerciseKind
 
     prompt: str
-    """Sa ki parèt anwo — karaktè, mo anglè, oswa yon fraz."""
+    """What appears at the top — a character, an English word, or a sentence."""
 
     answer: str
-    """Bon repons lan. Li DWE ye nan `options`."""
+    """The correct answer. It MUST be in `options`."""
 
     options: list[str] = field(default_factory=list)
-    """Chwa yo, deja melanje. Vid pa janm ta dwe rive."""
+    """The choices, already shuffled. Should never be empty."""
 
     hint: str = ""
-    """Ti liy anba kesyon an — pinyin, oswa sa yon moun sot di."""
+    """Small line under the question — pinyin, or what someone just said."""
 
     audio: str = ""
-    """Chemen son an. Vid pou kounye a — gade AUDIO_PLAN.md."""
+    """Path to the audio file. Empty for now — see AUDIO_PLAN.md."""
 
     source: str = ""
-    """Ki mo/liy egzèsis la soti — pou swiv pwogrè pi devan."""
+    """Which word/line the exercise came from — for tracking progress later."""
 
     @property
     def meta(self) -> KindMeta:
@@ -109,11 +107,12 @@ class Exercise:
         return choice == self.answer
 
     def reshuffled(self, rng) -> "Exercise":
-        """Yon kopi ak chwa yo nan yon lòt lòd.
+        """A copy with the choices in a different order.
 
-        Sèvi lè yon egzèsis retounen nan liy nan apre yon erè: si chwa
-        yo rete nan menm plas la, moun nan sonje POZISYON an olye repons
-        lan. Se pa sa nou vle anseye.
+        Used when an exercise goes back into the queue after a
+        mistake: if the choices stay in the same spot, the person
+        remembers the POSITION instead of the answer. That's not what
+        we want to teach.
         """
         options = list(self.options)
         rng.shuffle(options)

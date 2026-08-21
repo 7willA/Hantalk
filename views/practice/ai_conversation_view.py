@@ -2,10 +2,10 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""AI conversation view — ekran 05 nan handoff la.
+"""AI conversation view — screen 05 in the handoff.
 
-Tèm nwa, avatar pwofesè, badj LIVE, soutit, bouton mic.
-DEMO: pa gen STT/TTS ni API. Bouton mic la jis chanje eta afichaj la.
+Dark theme, teacher avatar, LIVE badge, subtitles, mic button.
+DEMO: no STT/TTS and no API. The mic button only changes the display state.
 """
 
 import flet as ft

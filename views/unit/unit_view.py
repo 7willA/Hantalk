@@ -2,29 +2,30 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Unit view — anndan yon inite: 5 nœud aktivite sou yon chemen.
+"""Unit view — inside a unit: 5 activity nodes on a path.
 
-Wout: /unit/{n}   (n = nimewo leson an, ki se nimewo inite a)
+Route: /unit/{n}   (n = lesson number, which is also the unit number)
 
-SE ISIT LA HANTALK SISPANN SANBLE AK LÒT MOUN
+THIS IS WHERE HANTALK STOPS LOOKING LIKE EVERYONE ELSE
 
-  Twa nan 5 nœud yo pa ka egziste nan Duolingo:
+  Three of the 5 nodes can't exist in Duolingo:
 
-    Fonetik  漢字 · ㄅㄆㄇ · Tongyong · Pinyin — 4 sistèm ekriti pou
-             menm fraz la. Pa gen lòt lang ki bezwen sa.
-    Ton      陰平 · 陽平 · 上聲 · 去聲 + ton netral la.
-    Pratike  pale ak yon pwofesè AI.
+    Phonetic  漢字 · ㄅㄆㄇ · Tongyong · Pinyin — 4 writing systems for
+              the same phrase. No other language needs this.
+    Tones     陰平 · 陽平 · 上聲 · 去聲 + the neutral tone.
+    Practice  talk with an AI teacher.
 
-  Nœud yo pa kreye okenn nouvo kontni: yo mennen sou ekran ki deja
-  egziste (/lesson, /vocab, /phonetic, /drills, /practice). Onglè yo
-  nan `lesson_view.py` rete — se yon dezyèm chemen sou menm kontni an.
+  The nodes don't create any new content: they lead to screens that
+  already exist (/lesson, /vocab, /phonetic, /drills, /practice). The
+  tabs in `lesson_view.py` stay — this is just a second path to the
+  same content.
 
-BOUTON GID LA
+THE GUIDE BUTTON
 
-  Nan kwen dwat bandwòl la (kote Duolingo mete ikon nòt li a) gen yon
-  bouton ki louvri gid inite a: pattern gramatikal yo + nòt kiltirèl la.
-  Sa a se kontni ki deja nan `models/lesson.py` men ki pa t gen kote
-  pou l parèt.
+  In the top-right corner of the banner (where Duolingo puts its notes
+  icon) there's a button that opens the unit guide: the grammar
+  patterns + the cultural note. This is content that already exists in
+  `models/lesson.py` but had nowhere to appear.
 """
 
 import flet as ft
@@ -39,7 +40,7 @@ from models.activity import ActivityState, build_activities
 
 
 def _guide_dialog(page: ft.Page, lesson, bg: str) -> None:
-    """Gid inite a: pattern gramatikal yo + nòt kiltirèl la."""
+    """The unit guide: the grammar patterns + the cultural note."""
     blocks: list[ft.Control] = []
 
     for pattern in lesson.patterns:
@@ -70,7 +71,7 @@ def _guide_dialog(page: ft.Page, lesson, bg: str) -> None:
                 content=ft.Column(
                     spacing=6,
                     controls=[
-                        ft.Text("NÒT KILTIRÈL", size=theme.SIZE_LABEL,
+                        ft.Text("CULTURE NOTE", size=theme.SIZE_LABEL,
                                 weight=ft.FontWeight.W_700,
                                 color=theme.TEXT_MUTED),
                         ft.Text(lesson.culture_note, size=theme.SIZE_BODY,
@@ -82,7 +83,7 @@ def _guide_dialog(page: ft.Page, lesson, bg: str) -> None:
 
     if not blocks:
         blocks.append(
-            ft.Text("Gid sa a poko ekri pou inite sa a.",
+            ft.Text("This guide has not been written for this unit yet.",
                     size=theme.SIZE_BODY, color=theme.TEXT_MUTED)
         )
 
@@ -93,7 +94,7 @@ def _guide_dialog(page: ft.Page, lesson, bg: str) -> None:
         ft.AlertDialog(
             bgcolor=theme.SURFACE,
             shape=ft.RoundedRectangleBorder(radius=theme.RADIUS_LG),
-            title=ft.Text("Gid inite a", size=theme.SIZE_H3,
+            title=ft.Text("Unit guide", size=theme.SIZE_H3,
                           weight=ft.FontWeight.W_700, color=theme.TEXT),
             content=ft.Container(
                 width=320,
@@ -101,7 +102,7 @@ def _guide_dialog(page: ft.Page, lesson, bg: str) -> None:
                                   controls=blocks),
             ),
             actions=[
-                ft.TextButton("Fèmen", on_click=close,
+                ft.TextButton("Close", on_click=close,
                               style=ft.ButtonStyle(color=theme.PRIMARY)),
             ],
             actions_alignment=ft.MainAxisAlignment.END,
@@ -115,7 +116,7 @@ def unit_view(page: ft.Page, lesson_number: int) -> ft.View:
     bg, fg = theme.section_color(section.color_index)
     activities = build_activities(lesson)
 
-    # Ki nœud ki gen kat li louvri — nou kòmanse ak sa ki aktif la.
+    # Which node has its card open — we start with the active one.
     first_active = next(
         (a.kind.value for a in activities
          if a.state is ActivityState.ACTIVE),
@@ -143,7 +144,7 @@ def unit_view(page: ft.Page, lesson_number: int) -> ft.View:
             ft.Container(
                 padding=ft.Padding.only(top=16, bottom=20),
                 content=path_banner(
-                    kicker=f"{section.label()} · INITE {lesson.number}",
+                    kicker=f"{section.label()} · UNIT {lesson.number}",
                     traditional=lesson.traditional,
                     english=lesson.english,
                     bg=bg,
@@ -171,12 +172,12 @@ def unit_view(page: ft.Page, lesson_number: int) -> ft.View:
                     out.append(
                         locked_callout(
                             activity.title,
-                            "Fini aktivite ki anvan an pou debloke sa a.",
+                            "Finish the previous activity to unlock this one.",
                         )
                     )
                 else:
-                    label = ("REVIZE" if activity.state is ActivityState.DONE
-                             else "KOMANSE")
+                    label = ("REVIEW" if activity.state is ActivityState.DONE
+                             else "START")
                     out.append(
                         node_callout(
                             title=activity.title,
@@ -218,7 +219,7 @@ def unit_view(page: ft.Page, lesson_number: int) -> ft.View:
                     spacing=0,
                     expand=True,
                     controls=[
-                        ft.Text(f"Inite {lesson.number}",
+                        ft.Text(f"Unit {lesson.number}",
                                 size=theme.SIZE_H3,
                                 weight=ft.FontWeight.W_600, color=theme.TEXT),
                         ft.Text(section.english, size=theme.SIZE_SMALL,

@@ -2,24 +2,24 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Home view — chemen aprantisaj la.
+"""Home view — the learning path.
 
-Estrikti: Seksyon → Inite → (Aktivite, sou `views/unit/unit_view.py`)
+Structure: Section → Unit → (Activity, in `views/unit/unit_view.py`)
 
-KISA KI CHANJE PA RAPÒ AK ANSYEN AN
+WHAT CHANGED COMPARED TO THE OLD VERSION
 
-  Anvan: yon lis plat de 12 kat leson.
-  Kounye a: pou chak seksyon, yon bandwòl koulè epi inite li yo kòm
-  nœud an zigzag. Tape yon inite louvri yon ti kat ak yon bouton.
+  Before: a flat list of 12 lesson cards.
+  Now: for each section, a colored banner and its units shown as
+  zigzag nodes. Tapping a unit opens a small card with a button.
 
-  Lide a soti nan Duolingo ak HelloChinese, men vokabilè a se pa
-  Hantalk: se seksyon PAVC yo, epi anndan chak inite se Dyalòg,
-  Vokabilè, Fonetik, Ton ak Pratike.
+  The idea comes from Duolingo and HelloChinese, but the vocabulary is
+  Hantalk's own: these are the PAVC sections, and inside each unit
+  there's Dialogue, Vocabulary, Phonetics, Tones, and Practice.
 
-SA NOU PA PRAN NAN YO
+WHAT WE ARE NOT TAKING FROM THEM
 
-  Maskòt (nou pa gen), jem/kè/enèji (pa gen ekonomi nan app la),
-  kòf rekonpans (pa gen anyen pou bay ankò).
+  Mascot (we don't have one), gems/hearts/energy (no economy in the
+  app), reward chest (nothing else to give out).
 """
 
 import flet as ft
@@ -38,13 +38,13 @@ from data.lessons.all_lessons import (
 )
 from models.activity import ActivityState
 
-# Done demo pou pati ki poko konekte ak yon vrè sèvis pwogrè.
+# Demo data for parts not yet connected to a real progress service.
 STREAK_DAYS = 12
 XP = 1840
 
 
 def _unit_state(lesson) -> ActivityState:
-    """Eta yon inite sou chemen an."""
+    """State of a unit on the path."""
     if lesson.is_locked:
         return ActivityState.LOCKED
     if lesson.progress >= 1.0:
@@ -62,10 +62,10 @@ def _icon_button(name: str, on_click=None) -> ft.Control:
 
 
 def _stat(icon: str, value: str, color: str) -> ft.Control:
-    """Ti konte anwo a — ikon koulè, chif an tèks fonse.
+    """Small stat at the top — colored icon, number in dark text.
 
-    Chif la rete nan `theme.TEXT` paske koulè vivan yo bay 2.06:1 sou
-    fon an: byen pou yon ikon, pa lizib pou yon chif.
+    The number stays in `theme.TEXT` because the vivid colors give
+    2.06:1 on the background: fine for an icon, not readable for a number.
     """
     return ft.Row(
         spacing=6,
@@ -79,7 +79,7 @@ def _stat(icon: str, value: str, color: str) -> ft.Control:
 
 
 def _top_bar(course_pct: float, on_settings=None) -> ft.Control:
-    """Ranje konpak: mak la, konte yo, angrenaj la."""
+    """Compact row: the logo, the stats, the gear icon."""
     return ft.Container(
         bgcolor=theme.SURFACE,
         border=ft.Border.only(bottom=ft.BorderSide(1, theme.OUTLINE)),
@@ -144,9 +144,9 @@ def home_view(page: ft.Page) -> ft.View:
     course_pct = sum(l.progress for l in ALL_LESSONS) / len(ALL_LESSONS)
     current = current_lesson()
 
-    # Ki inite ki gen kat li louvri. `None` = okenn.
-    # Nou kòmanse ak inite an kou a louvri, konsa premye bagay moun nan
-    # wè lè li rive se kote li dwe kontinye a.
+    # Which unit has its card open. `None` = none.
+    # We start with the current unit open, so the first thing the
+    # person sees when they arrive is where they should continue.
     state = {"open": current.number}
 
     body = ft.Column(
@@ -184,7 +184,7 @@ def home_view(page: ft.Page) -> ft.View:
                     english=section.english,
                     bg=bg,
                     fg=fg,
-                    progress=f"{done} / {section.unit_count} inite",
+                    progress=f"{done} / {section.unit_count} units",
                 ),
             )
         ]
@@ -209,17 +209,17 @@ def home_view(page: ft.Page) -> ft.View:
                     out.append(
                         locked_callout(
                             lesson.traditional,
-                            "Fini inite ki anvan an pou debloke sa a.",
+                            "Finish the previous unit to unlock this one.",
                         )
                     )
                 else:
-                    label = ("REVIZE" if node_state is ActivityState.DONE
-                             else "KOMANSE")
+                    label = ("REVIEW" if node_state is ActivityState.DONE
+                             else "START")
                     out.append(
                         node_callout(
                             title=lesson.traditional,
                             subtitle=lesson.english,
-                            meta=f"5 aktivite · {lesson.progress:.0%} fèt",
+                            meta=f"5 activities · {lesson.progress:.0%} done",
                             bg=bg,
                             fg=fg,
                             action_label=label,

@@ -2,10 +2,8 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Grammar table control — tablo estrikti pou tab Syntax lan.
-
-Flutter counterpart: lib/widgets/grammar_table.dart
-Design: ekran 02, sc-if isSyntax.
+"""Grammar table control — Structure of the board for the table syntax .
+Design: screen 02.
 """
 
 import flet as ft
@@ -31,7 +29,7 @@ def _cell(text: str, header: bool) -> ft.Control:
 
 
 def grammar_table(pattern: GrammarPattern) -> ft.Control:
-    """Kat ki gen fòmil la anwo epi tablo estrikti a anba."""
+    """Card with the formula on top and the structure table below."""
     rows: list[ft.Control] = [
         ft.Container(
             bgcolor=theme.SURFACE_VARIANT,

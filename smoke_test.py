@@ -2,14 +2,7 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Smoke test — konstwi chak ekran san louvri yon fenèt.
 
-Kouri:  python smoke_test.py
-
-Li pa teste sa ki parèt sou ekran an — li teste ke chak view konstwi
-san erè API. Se pi bon fason pou pran yon `AttributeError` Flet anvan
-w kouri app la.
-"""
 
 import traceback
 
@@ -20,7 +13,7 @@ from data.lessons.all_lessons import ALL_LESSONS
 
 
 class FakePage:
-    """Yon fo `ft.Page` ki jis vale tout sa view yo mande l."""
+ 
 
     route = "/"
     views: list = []
@@ -32,15 +25,13 @@ class FakePage:
     async def push_route(self, route):
         pass
 
-    # Nòt: `page.pop_route()` PA egziste nan Flet 0.85. Nou pa mete l isit
-    # espre — konsa si yon view sèvi avè l ankò, tès la ap kraze.
+  
 
     def run_task(self, fn, *args):
-        # Flet la vre egzije yon `async def` isit la — si nou aksepte tout
-        # bagay, tès la ap di "ok" pandan app la ap kraze sou telefòn nan.
+  
         import asyncio
         assert asyncio.iscoroutinefunction(fn), (
-            f"run_task mande yon `async def`, li resevwa {fn!r}"
+            f"run_task needs an `async def`, it received {fn!r}"
         )
 
     def update(self):
@@ -62,8 +53,8 @@ def main() -> int:
     for route in ROUTES:
         try:
             view = router.resolve(FakePage(), route)
-            assert isinstance(view, ft.View), f"{route} pa bay yon View"
-            print(f"  ok   {route:<18} → {len(view.controls)} kontwòl")
+            assert isinstance(view, ft.View), f"{route} did not return a View"
+            print(f"  ok   {route:<18} → {len(view.controls)} controls")
         except Exception:
             failures += 1
             print(f"  FAIL {route}")
@@ -74,21 +65,21 @@ def main() -> int:
         d = lesson.dialogue
         problems = []
         if d is None or not d.lines:
-            problems.append("pa gen dyalòg")
+            problems.append("no dialogue")
         if not lesson.vocabulary:
-            problems.append("pa gen vokabilè")
+            problems.append("no vocabulary")
         for p in lesson.patterns:
             if any(len(r) != len(p.headers) for r in p.rows):
-                problems.append(f"tablo kwochi nan {p.title}")
+                problems.append(f"crooked table in {p.title}")
         if problems:
             failures += 1
-            print(f"  FAIL leson {lesson.number}: {', '.join(problems)}")
+            print(f"  FAIL lesson {lesson.number}: {', '.join(problems)}")
 
     print()
     if failures:
-        print(f"❌ {failures} pwoblèm")
+        print(f"❌ {failures} problems")
     else:
-        print(f"✅ {len(ROUTES)} wout + {len(ALL_LESSONS)} leson — tout bon")
+        print(f"✅ {len(ROUTES)} routes + {len(ALL_LESSONS)} lessons — all good")
     return 1 if failures else 0
 
 

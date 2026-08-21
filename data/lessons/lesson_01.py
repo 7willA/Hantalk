@@ -2,68 +2,6 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Lesson 1 — 你叫什麼名字 / What Is Your Name?
-
-from models.dialogue import Dialogue, DialogueLine
-from models.grammar_pattern import GrammarPattern
-from models.lesson import Lesson
-from models.vocabulary_entry import VocabularyEntry
-
-
-LESSON_01 = Lesson(
-    number=1,
-    traditional="你叫什麼名字",
-    english="What Is Your Name?",
-    dialogue=Dialogue(
-        scene="校園",
-        scene_en="On campus",
-        lines=[
-            DialogueLine(
-                speaker="王美美",
-                avatar="美",
-                traditional="你好！",
-                pinyin="nǐ hǎo",
-                english="Hello!",
-                is_left=True,
-            ),
-            DialogueLine(
-                speaker="李明",
-                avatar="明",
-                traditional="你好！你叫什麼名字？",
-                pinyin="nǐ hǎo! nǐ jiào shénme míngzi?",
-                english="Hello! What's your name?",
-                is_left=False,
-            ),
-        ],
-    ),
-    vocabulary=[
-        VocabularyEntry(
-            traditional="名字",
-            pinyin="míngzi",
-            pos="noun",
-            english="name",
-            example_zh="我的名字是李明。",
-            example_pinyin="wǒ de míngzi shì Lǐ Míng",
-            example_en="My name is Li Ming.",
-        ),
-    ],
-    patterns=[
-        GrammarPattern(
-            title="Pattern 1",
-            formula="我叫 + 名字",
-            explanation="Subject + 叫 + name. Used to state or ask a name.",
-            headers=["Subject", "Verb", "Name"],
-            rows=[
-                ["我", "叫", "李明"],
-                ["你", "叫", "什麼名字"],
-            ],
-        ),
-    ],
-    culture_note="In Taiwan, family names come first...",
-)
-"""
-
-"""Lesson 1 — 你叫什麼名字 / What Is Your Name?"""
 
 from models.dialogue import Dialogue, DialogueLine
 from models.grammar_pattern import GrammarPattern

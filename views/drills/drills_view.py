@@ -2,10 +2,10 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Drills view — ekran 06 nan handoff la.
+"""Drills view — screen 06 in the handoff.
 
-Kat presizyon · gril 2×3 tiles ton (koub sou ft.Canvas) · panèl drill
-seleksyone · bouton "Start drill" · NavigationBar.
+Accuracy card · 2×3 grid of tone tiles (curves on ft.Canvas) · selected
+drill panel · "Start drill" button · NavigationBar.
 """
 
 import flet as ft
@@ -23,7 +23,7 @@ TILE_H = 34
 
 
 def _contour(drill: Drill, active: bool) -> ft.Control:
-    """Koub ton an desine sou yon Canvas."""
+    """The tone curve drawn on a Canvas."""
     line_color = theme.WHITE if active else theme.PRIMARY
     grid_color = theme.ON_PRIMARY_SOFT_DIM if active else theme.OUTLINE
 

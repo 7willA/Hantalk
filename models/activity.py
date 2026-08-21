@@ -2,40 +2,20 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Activity model — yon nœud sou chemen an anndan yon inite.
 
-Flutter counterpart: pa gen — se yon nivo nouvo.
-
-LIDE A
-
-  Yon leson Hantalk deja gen 5 onglè: Dialogue · Vocab · Syntax ·
-  Activities · Notes. Nan Duolingo, yon inite gen ~5 nœud sou yon
-  chemen. Se menm bagay la — nou jis chanje fòm afichaj la.
-
-  Donk yon `Activity` PA yon nouvo kontni. Se yon fenèt sou kontni ki
-  deja nan `Lesson`. `build_activities()` gade sa leson an genyen epi
-  li fabrike lis nœud yo.
-
-DE NAN 5 YO SE PA HANTALK
-
-  `FONETIK` (4 sistèm: 漢字 / ㄅㄆㄇ / Tongyong / Pinyin) ak `TON`
-  (陰平 / 陽平 / 上聲 / 去聲) pa egziste nan Duolingo ni HelloChinese.
-  Yo pa ka egziste — lòt lang pa bezwen yo. Se la chemen Hantalk la
-  sispann sanble ak lòt moun.
-"""
 
 from dataclasses import dataclass
 from enum import Enum
 
 
 class ActivityKind(str, Enum):
-    """Kalite nœud. Valè a se sa ki ale nan yon wout URL."""
+    """Node kind. The value is what goes into a URL route."""
 
-    DYALOG = "dyalog"
-    VOKABILE = "vokabile"
-    EGZESIS = "egzesis"
-    FONETIK = "fonetik"
-    TON = "ton"
+    DIALOGUE = "dialogue"
+    VOCABULARY = "vocabulary"
+    EXERCISES = "exercises"
+    PHONETICS = "phonetics"
+    TONES = "tones"
     AI = "ai"
 
 
@@ -45,29 +25,29 @@ class ActivityState(str, Enum):
     LOCKED = "locked"
 
 
-# Tit ak sou-tit yo viv isit la, pa nan ekran an, konsa yo rete menm
-# kèlkeswa kote nou montre yo (chemen an, popup la, rezime a).
+# Titles and subtitles live here, not in the screen, so they stay the
+# same no matter where we show them (the path, the popup, the summary).
 KIND_LABELS: dict[ActivityKind, tuple[str, str]] = {
-    ActivityKind.DYALOG: ("Dyalòg", "Koute epi li konvèsasyon an"),
-    ActivityKind.VOKABILE: ("Vokabilè", "Kat memwa pou mo nouvo yo"),
-    ActivityKind.EGZESIS: ("Egzèsis", "Teste sa w sonje — 12 kesyon"),
-    ActivityKind.FONETIK: ("Fonetik", "漢字 · ㄅㄆㄇ · Tongyong · Pinyin"),
-    ActivityKind.TON: ("Ton", "Antrene 4 ton yo ak ton netral la"),
-    ActivityKind.AI: ("Pratike", "Pale ak pwofesè AI a"),
+    ActivityKind.DIALOGUE: ("Dialogue", "Listen to and read the conversation"),
+    ActivityKind.VOCABULARY: ("Vocabulary", "Flashcards for new words"),
+    ActivityKind.EXERCISES: ("Exercises", "Test what you remember — 12 questions"),
+    ActivityKind.PHONETICS: ("Phonetics", "漢字 · ㄅㄆㄇ · Tongyong · Pinyin"),
+    ActivityKind.TONES: ("Tones", "Practice the 4 tones plus the neutral tone"),
+    ActivityKind.AI: ("Practice", "Talk with the AI teacher"),
 }
 
-# Lòd nœud yo sou chemen an. Fonetik vin apre dyalòg paske ou bezwen
-# tande fraz la anvan ou dekonpoze son li.
+# Order of nodes on the path. Phonetics comes after dialogue because you
+# need to hear the sentence before you break down its sounds.
 #
-# EGZESIS chita apre VOKABILE espre: se premye moman nan inite a kote
-# app la MANDE w yon bagay olye li MONTRE w yon bagay. Anvan li, ou te
-# resevwa; apre li, ou pwodwi.
+# EXERCISES sits after VOCABULARY on purpose: it's the first moment in the
+# unit where the app ASKS you for something instead of SHOWING you
+# something. Before it, you received; after it, you produce.
 KIND_ORDER: tuple[ActivityKind, ...] = (
-    ActivityKind.DYALOG,
-    ActivityKind.VOKABILE,
-    ActivityKind.EGZESIS,
-    ActivityKind.FONETIK,
-    ActivityKind.TON,
+    ActivityKind.DIALOGUE,
+    ActivityKind.VOCABULARY,
+    ActivityKind.EXERCISES,
+    ActivityKind.PHONETICS,
+    ActivityKind.TONES,
     ActivityKind.AI,
 )
 
@@ -79,7 +59,7 @@ class Activity:
     state: ActivityState = ActivityState.LOCKED
 
     item_count: int = 0
-    """Konbyen bagay ladan l — liy dyalòg, mo, silab. 0 = nou pa konnen."""
+    """How many items it contains — dialogue lines, words, syllables. 0 = we don't know."""
 
     done_count: int = 0
 
@@ -93,56 +73,57 @@ class Activity:
 
     @property
     def route(self) -> str:
-        """Wout la pou nœud sa a.
+        """The route for this node.
 
-        Wout ki deja egziste yo pa chanje — nou jis mape sou yo.
+        Existing routes don't change — we just map onto them.
         """
         n = self.lesson_number
         return {
-            ActivityKind.DYALOG: f"/lesson/{n}",
-            ActivityKind.VOKABILE: f"/vocab/{n}",
-            ActivityKind.EGZESIS: f"/exercise/{n}",
-            ActivityKind.FONETIK: f"/phonetic/{n}/0",
-            ActivityKind.TON: "/drills",
+            ActivityKind.DIALOGUE: f"/lesson/{n}",
+            ActivityKind.VOCABULARY: f"/vocab/{n}",
+            ActivityKind.EXERCISES: f"/exercise/{n}",
+            ActivityKind.PHONETICS: f"/phonetic/{n}/0",
+            ActivityKind.TONES: "/drills",
             ActivityKind.AI: "/practice",
         }[self.kind]
 
     def count_label(self) -> str:
-        """'3 sou 8' — sa ki parèt nan popup la."""
+        """'3 of 8' — what appears in the popup."""
         if not self.item_count:
             return ""
-        return f"{self.done_count} sou {self.item_count}"
+        return f"{self.done_count} of {self.item_count}"
 
 
 def _item_count(lesson, kind: ActivityKind) -> int:
-    """Konbyen bagay yon nœud genyen, dapre kontni leson an."""
-    if kind is ActivityKind.DYALOG:
+    """How many items a node has, based on the lesson's content."""
+    if kind is ActivityKind.DIALOGUE:
         return len(lesson.dialogue.lines) if lesson.dialogue else 0
-    if kind is ActivityKind.VOKABILE:
+    if kind is ActivityKind.VOCABULARY:
         return len(lesson.vocabulary)
-    if kind is ActivityKind.EGZESIS:
-        # Yon sesyon fiks. `models/session.py` gen valè a — nou pa
-        # enpòte l isit la pou `models/activity.py` rete san depandans.
+    if kind is ActivityKind.EXERCISES:
+        # A fixed-size session. `models/session.py` has the value — we
+        # don't import it here so `models/activity.py` stays free of
+        # dependencies.
         return 12
-    if kind is ActivityKind.FONETIK:
+    if kind is ActivityKind.PHONETICS:
         return len(lesson.dialogue.lines) if lesson.dialogue else 0
-    if kind is ActivityKind.TON:
-        return 5          # 4 ton + ton netral la
-    return 0              # AI a pa gen kantite fiks
+    if kind is ActivityKind.TONES:
+        return 5          # 4 tones + the neutral tone
+    return 0              # AI doesn't have a fixed count
 
 
 def build_activities(lesson) -> list[Activity]:
-    """Fabrike 5 nœud yon inite, ak eta yo.
+    """Build the 5 nodes of a unit, with their states.
 
-    KIJAN ETA YO DESIDE
+    HOW STATES ARE DECIDED
 
-      Si leson an bloke  → tout nœud bloke.
-      Sinon nou pran `lesson.progress` (0.0 → 1.0) epi nou tradui l an
-      nœud: ak 5 nœud, 0.5 vle di 2 fini epi 3zyèm nan aktif.
+      If the lesson is locked → all nodes are locked.
+      Otherwise we take `lesson.progress` (0.0 → 1.0) and translate it
+      into nodes: with 5 nodes, 0.5 means 2 done and the 3rd active.
 
-      Sa a se yon aprosimasyon. Lè `progress_service.py` ap swiv chak
-      aktivite separeman, se sèl fonksyon sa a k ap chanje — ekran an
-      p ap konnen anyen.
+      This is an approximation. Once `progress_service.py` tracks each
+      activity separately, only this function will need to change —
+      the screen won't know anything happened.
     """
     total = len(KIND_ORDER)
     finished = int(round(getattr(lesson, "progress", 0.0) * total))

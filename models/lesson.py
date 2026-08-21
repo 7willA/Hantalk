@@ -2,7 +2,7 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Lesson model — yon leson konplè.
+"""Lesson model — a complete lesson.
 
 Flutter counterpart: lib/models/lesson.dart
 """
@@ -16,10 +16,10 @@ from models.vocabulary_entry import VocabularyEntry
 
 @dataclass
 class Lesson:
-    """Yon leson — ki sèvi tou kòm yon INITE sou chemen an.
+    """A lesson — which also acts as a UNIT on the path.
 
-    Nan nouvo estrikti a: Section → Unit → Activity. Yon `Lesson` se
-    yon inite; 5 onglè li yo vin 5 nœud (gade `models/activity.py`).
+    In the new structure: Section → Unit → Activity. A `Lesson` is
+    a unit; its 5 tabs become 5 nodes (see `models/activity.py`).
     """
 
     number: int
@@ -33,9 +33,9 @@ class Lesson:
     is_locked: bool = False
 
     section_number: int = 1
-    """Ki seksyon inite sa a fè pati. Gade `models/section.py`."""
+    """Which section this unit belongs to. See `models/section.py`."""
 
     @property
     def has_content(self) -> bool:
-        """Èske leson an gen vre kontni, oswa se yon tit sèlman?"""
+        """Does the lesson have real content, or is it just a title?"""
         return self.dialogue is not None or bool(self.vocabulary)

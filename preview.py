@@ -2,11 +2,7 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Preview jetab — pou wè controls yo san Home lan egziste.
 
-Kouri:  flet run preview.py
-Efase l lè Home lan fini.
-"""
 
 import flet as ft
 

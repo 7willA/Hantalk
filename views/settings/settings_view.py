@@ -13,7 +13,7 @@ from services import settings_service as settings
 APP_VERSION = "1.0.0"
 
 # ══════════════════════════════════════════════
-# Tèks — yon sèl kote pou tradiksyon pita
+# Text — one place for translation later
 # ══════════════════════════════════════════════
 
 L = {
@@ -183,10 +183,10 @@ def _row(title: str, trailing: ft.Control, subtitle: str | None = None,
 
 def _stacked_row(title: str, control: ft.Control,
                  subtitle: ft.Control | str | None = None) -> ft.Control:
-    """Ranje kote kontwòl la twò laj pou l chita akote tit la.
+    """Row where the control is too wide to sit next to the title.
 
-    `subtitle` ka yon `ft.Text` vivan — konsa nou ka chanje l pita san
-    nou pa rekreye ranje a.
+    `subtitle` can be a live `ft.Text` — so we can change it later
+    without recreating the row.
     """
     head: list[ft.Control] = [
         ft.Text(title, size=theme.SIZE_BODY, weight=ft.FontWeight.W_500,
@@ -376,7 +376,7 @@ class _NavRow:
         _update(self.value)
 
     def set_enabled(self, enabled: bool) -> None:
-        """Yon ranje ki depann yon switch etenn dwe GEN LÈ etenn."""
+        """A row that depends on a switch being off should LOOK disabled."""
         self._enabled = enabled
         self.control.opacity = 1.0 if enabled else 0.4
         self.control.ink = enabled
@@ -403,7 +403,7 @@ def settings_view(page: ft.Page) -> ft.View:
     for key, _ in PHONETIC_LABELS:
         state[key] = settings.get_bool(key)
 
-    # ── zouti ────────────────────────────────
+    # ── tools ────────────────────────────────
 
     def snack(message: str) -> None:
         page.show_dialog(
@@ -633,7 +633,7 @@ def settings_view(page: ft.Page) -> ft.View:
         _update(zh_preview, zh_pct)
 
     def set_scale(value) -> None:
-        """Mete slider la ak apèsi li a sou yon valè — san ekri anyen."""
+        """Set the slider and its preview to a value — without writing anything."""
         value = float(value)
         zh_slider.value = value
         zh_preview.size = int(theme.SIZE_ZH * value)
@@ -839,7 +839,7 @@ def settings_view(page: ft.Page) -> ft.View:
     _header_lifted = False
 
     def on_body_scroll(e) -> None:
-        """Liy anba ankadreman an parèt sèlman lè kontni an pase anba l."""
+        """The line under the header appears only once content scrolls under it."""
         nonlocal _header_lifted
         lifted = (e.pixels or 0) > 4
         if lifted == _header_lifted:

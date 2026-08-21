@@ -2,7 +2,7 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""GrammarPattern model — yon modèl fraz ak tablo estrikti li.
+"""GrammarPattern model — a sentence pattern and its structure table.
 
 Flutter counterpart: lib/models/grammar_pattern.dart
 """

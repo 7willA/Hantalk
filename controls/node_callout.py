@@ -2,33 +2,13 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Node callout — ti kat ki louvri lè w tape yon nœud.
-
-Nan Duolingo, tape yon nœud pa navige — li louvri yon kat ak yon flèch
-ki pwente sou nœud la, epi ou wè sa k ap tann ou anvan ou antre.
-
-Nou gen yon rezon anplis pou fè l: nœud Hantalk yo pa tout menm bagay.
-Yon sèk ak yon ㄅ pa di w si w pral wè 4 sistèm fonetik oswa fè yon
-egzèsis. Duolingo ka navige dirèk paske tout nœud li yo idantik.
-
-KIJAN LI POZISYONE
-
-  Kat la antre NAN kouran an, jis anba nœud ou tape a — li pa yon
-  `Stack` ki flote. Sa vle di:
-    - pa gen matematik pozisyon ki ka kraze sou yon lòt gwosè ekran
-    - li desann ak paj la lè w ap woule
-    - kontni ki anba a jis pouse desann, menm jan ak Duolingo
-
-  Flèch la se yon ti kare vire 45° ki chita anwo kat la.
-"""
-
 import flet as ft
 
 from app import theme
 
 
 def _pointer(color: str) -> ft.Control:
-    """Ti triyang ki pwente sou nœud la — yon kare vire 45°."""
+    """Small triangle that points at the node — a square turned 45°."""
     return ft.Row(
         alignment=ft.MainAxisAlignment.CENTER,
         controls=[
@@ -36,7 +16,7 @@ def _pointer(color: str) -> ft.Control:
                 width=18,
                 height=18,
                 bgcolor=color,
-                rotate=ft.Rotate(0.785),      # 45° an radyan
+                rotate=ft.Rotate(0.785),      # 45 degrees, in radians
                 margin=ft.Margin.only(bottom=-9),
             )
         ],
@@ -52,10 +32,10 @@ def node_callout(
     on_action=None,
     meta: str = "",
 ) -> ft.Control:
-    """Kat la ak flèch li.
+    """The card, with its pointer arrow.
 
-    `bg`/`fg` soti nan `theme.section_color()`, donk tèks la toujou
-    lizib kèlkeswa seksyon an.
+    `bg`/`fg` come from `theme.section_color()`, so the text stays
+    easy to read no matter which section it is in.
     """
     body: list[ft.Control] = [
         ft.Text(title, size=theme.SIZE_H3, weight=ft.FontWeight.W_700,
@@ -97,7 +77,7 @@ def node_callout(
 
 
 def locked_callout(title: str, reason: str) -> ft.Control:
-    """Vèsyon etenn nan, pou yon nœud ki bloke."""
+    """The "off" version, used for a node that is locked."""
     return ft.Column(
         spacing=0,
         controls=[

@@ -2,12 +2,13 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Login view — email, telefòn, oswa non itilizatè; oswa sosyal.
+"""Login view — email, phone, or username; or social login.
 
-DEMO: pa gen verifikasyon. Nenpòt idantifyan valab mennen sou /home.
+DEMO: no verification. Any valid identifier leads to /home.
 
-Yon sèl chan pou twa kalite idantifyan: se nou ki devine kalite a
-(`app/validators.py`), epi ikòn nan bò dwat la montre sa nou konprann.
+One single field for three kinds of identifier: we guess the kind
+(`app/validators.py`), and the icon on the right shows what we
+understood.
 """
 
 import flet as ft
@@ -16,22 +17,23 @@ from app import theme, validators
 from app.screen import screen
 from controls.brand import logo_mark
 
-# Ki ikòn pou ki kalite idantifyan.
+# Which icon for which kind of identifier.
 KIND_ICONS = {
     validators.EMAIL: ft.Icons.ALTERNATE_EMAIL,
     validators.PHONE: ft.Icons.PHONE_OUTLINED,
     validators.USERNAME: ft.Icons.PERSON_OUTLINE,
 }
 
-# Koulè ofisyèl Facebook la. Li pa nan `theme.py` espre: theme.py se
-# palèt Hantalk, epi yon koulè mak yon lòt konpayi pa dwe antre ladan l
-# — demen si nou vire tout app la an mòd nwa, koulè sa a pa dwe chanje.
+# Facebook's official color. It's intentionally not in `theme.py`:
+# theme.py is Hantalk's palette, and another company's brand color
+# shouldn't be in it — tomorrow if we flip the whole app to dark mode,
+# this color shouldn't change.
 FACEBOOK_BLUE = "#1877F2"
 
 
 def _field(label: str, password: bool = False) -> ft.TextField:
-    """Pa gen `height` fiks: `error` la desine ANBA bwat la epi yon
-    wotè fiks ta koupe l."""
+    """No fixed `height`: the `error` is drawn BELOW the box and a
+    fixed height would cut it off."""
     return ft.TextField(
         label=label,
         width=290,
@@ -51,7 +53,7 @@ def _field(label: str, password: bool = False) -> ft.TextField:
 
 
 def _social_button(label: str, badge: ft.Control, on_click) -> ft.Button:
-    """Bouton blan ak yon ti bòdi — segondè devan CTA navy la."""
+    """White button with a thin border — secondary next to the navy CTA."""
     return ft.Button(
         width=290,
         height=50,
@@ -96,7 +98,7 @@ def login_view(page: ft.Page) -> ft.View:
     identifier = _field("Email, phone, or username")
     password = _field("Password", password=True)
 
-    # Ikòn nan bò dwat chan an: li di moun nan kisa nou konprann.
+    # The icon on the right of the field: it tells the person what we understood.
     kind_icon = ft.Icon(ft.Icons.PERSON_OUTLINE, size=20,
                         color=theme.TEXT_MUTED, visible=False)
     identifier.suffix = kind_icon
@@ -114,17 +116,17 @@ def login_view(page: ft.Page) -> ft.View:
         ),
     )
 
-    # Ti mesaj anba a — pou bouton sosyal yo ki poko branche.
+    # Small message below — for the social buttons that aren't wired up yet.
     notice = ft.Text("", size=12, color=theme.TEXT_MUTED, visible=False)
 
     def validate(e=None):
         value = identifier.value or ""
 
-        # Ikòn nan swiv sa moun nan ap tape, an tan reyèl.
+        # The icon follows what the person is typing, in real time.
         kind_icon.visible = bool(value)
         kind_icon.name = KIND_ICONS[validators.identifier_kind(value)]
 
-        # Efase erè a depi moun nan korije l — men pa leve youn isit la.
+        # Clear the error as soon as the person fixes it — but don't raise one here.
         if identifier.error and validators.identifier_error(value) is None:
             identifier.error = None
         if password.error and password.value:
@@ -136,7 +138,7 @@ def login_view(page: ft.Page) -> ft.View:
         page.update()
 
     def check_identifier(e):
-        """Sou blur — yon chan vid pa yon erè, se yon chan yo poko manyen."""
+        """On blur — an empty field isn't an error, it's just a field not touched yet."""
         identifier.error = (
             validators.identifier_error(identifier.value)
             if identifier.value else None
@@ -151,9 +153,9 @@ def login_view(page: ft.Page) -> ft.View:
             page.update()
             return
 
-        # Sa a se sa auth_service la dwe resevwa — ni plis ni mwens.
-        # `kind` di l nan ki kolòn pou l chèche; `who` se fòm nòmalize a.
-        # (Nou pa ekri yo nan console la: yon idantifyan se done prive.)
+        # This is exactly what auth_service should receive — no more, no less.
+        # `kind` tells it which column to search; `who` is the normalized form.
+        # (We don't print them to the console: an identifier is private data.)
         kind = validators.identifier_kind(identifier.value)
         who = validators.normalize_identifier(identifier.value)
 
@@ -182,8 +184,8 @@ def login_view(page: ft.Page) -> ft.View:
     password.on_submit = submit
     login_btn.on_click = submit
 
-    # Material pa gen logo Google la, donk nou desine yon "G" nan koulè
-    # mak la. Ranplase l ak yon vre ikòn nan assets/images lè w vle.
+    # Material doesn't have the Google logo, so we draw a "G" in the
+    # brand color. Replace it with a real icon from assets/images whenever you want.
     google_badge = ft.Container(
         width=20, height=20,
         alignment=ft.Alignment.CENTER,
@@ -244,7 +246,7 @@ def login_view(page: ft.Page) -> ft.View:
             style=ft.ButtonStyle(color=theme.PRIMARY),
         ),
         ft.TextButton(
-            "Skip for now (demo)",
+            "Demo for now",
             on_click=skip,
             style=ft.ButtonStyle(color=theme.TEXT_MUTED),
         ),

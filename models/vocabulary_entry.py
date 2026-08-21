@@ -2,7 +2,7 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""VocabularyEntry model — yon sèl mo vokabilè.
+"""VocabularyEntry model — a single vocabulary word.
 
 Flutter counterpart: lib/models/vocabulary_entry.dart
 """

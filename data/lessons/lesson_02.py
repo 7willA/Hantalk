@@ -4,8 +4,8 @@
 
 """Lesson 2 — 早安，你好嗎？ / Good Morning, How Are You?
 
-Fokis: salitasyon, 很 + adjektif, 也.
-Kontni orijinal Hantalk.
+Focus: greetings, 很 + adjective, 也.
+Original Hantalk content.
 """
 
 from models.dialogue import Dialogue, DialogueLine

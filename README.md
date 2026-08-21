@@ -4,7 +4,7 @@
 
 **Learn Mandarin Chinese as it is actually used in Taiwan.**
 
-Built with [Flet](https://flet.dev) — one Python codebase, running on desktop, web, and mobile.
+This is Built with [Flet](https://flet.dev) — one Python codebase, running on desktop, web, and mobile.
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![Flet](https://img.shields.io/badge/Flet-0.85.3-00C4B4)
@@ -28,15 +28,6 @@ competing romanization and phonetic systems, and every classroom picks a
 different one. Hantalk lets the learner display any combination of four systems
 side by side, and switch at any time:
 
-| System | Example (名字) | Common where |
-|:--|:--|:--|
-| 漢字 Hànzì | 名字 | everywhere |
-| ㄅㄆㄇㄈ Bopomofo | ㄇㄧㄥˊ ㄗ˙ | Taiwanese schools |
-| Tongyong Pinyin | míngzi | Taiwanese signage |
-| Hanyu Pinyin | míngzi | international textbooks |
-
-At least one system always stays enabled, so a lesson can never render blank.
-
 ## Features
 
 - **Lesson path** — a visual, node-based progression through units and lessons
@@ -46,7 +37,7 @@ At least one system always stays enabled, so a lesson can never render blank.
 - **Drills** — practice exercises generated from lesson content
 - **AI conversation practice** — free-form speaking practice *(in progress)*
 - **Progress tracking** — daily goals and streaks
-- **Settings** — phonetic systems, audio speed, daily goal, notifications, light/dark theme, and Chinese text scaling (0.8×–1.4×), all persisted on-device
+- **Settings** — phonetic systems, audio speed, daily goal, notifications, light/dark theme, and Chinese text scaling, all persisted on-device
 
 ## Screens
 
@@ -86,30 +77,6 @@ hantalk_flet/
     └── audio/           pronunciation audio
 ```
 
-Two architectural notes worth knowing before you read the code, both consequences
-of how Flet 0.85 handles services:
-
-1. **Services are attached per-View, not per-Page.** In Flet 0.85,
-   `page.services` is really `page.views[0].services`. Since `main.py` clears
-   `page.views` on every route change, a service bound to the first View would
-   die on the first navigation. `router.resolve()` therefore attaches the
-   settings service to *every* View it builds. See `app/router.py`.
-
-2. **Settings load after the first View exists, not before.** `page.update()`
-   goes through `page.views[0]`; calling it on an empty list raises
-   `RuntimeError("views list is empty.")`. The splash screen's two seconds give
-   the disk read time to finish. See the comments in `main.py`.
-
-Settings reads are synchronous by design: `load()` hits the disk once at
-startup into an in-memory cache, `get()` reads that cache with no `await`, and
-`set()` updates memory immediately and writes to disk behind it. The UI never
-waits on I/O, and a failed save degrades to in-memory defaults rather than an
-error in the user's face.
-
-> **Note on source comments:** some inline comments are currently in Haitian
-> Creole, the author's first language. They are being translated to English as
-> the code is revisited. Nothing user-facing is affected.
-
 ## Running it
 
 **Requirements:** Python 3.10 or newer.
@@ -146,11 +113,10 @@ flet run --web main.py
 
 ### Development helpers
 
-| Script | Purpose |
-|:--|:--|
+| Script                 | Purpose                                              |
 | `python check_data.py` | validate lesson data for missing or malformed fields |
-| `python smoke_test.py` | build every route once and confirm nothing raises |
-| `python preview.py` | render components in isolation while styling |
+| `python smoke_test.py` | build every route once and confirm nothing raises    |
+| `python preview.py`    | render components in isolation while styling         |
 
 ## Roadmap
 
@@ -164,7 +130,7 @@ flet run --web main.py
 
 ## Author
 
-**Wilkend** — Computer Science and Information Engineering, National Dong Hwa
+**Wilkend AUGUSTE ** — Computer Science and Information Engineering, National Dong Hwa
 University (NDHU), Hualien, Taiwan.
 
 ## License

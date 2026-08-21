@@ -2,31 +2,32 @@
 # Hantalk - proprietary software. See LICENSE at the repository root.
 # Unauthorized copying, modification, or redistribution is prohibited.
 
-"""Section model — yon gwoup inite ki fè yon nivo nan kou a.
+"""Section model — a group of units that makes up a level in the course.
 
-Flutter counterpart: pa gen — se yon nivo nouvo.
+Flutter counterpart: none — this is a new level.
 
-YERAJI A
+THE HIERARCHY
 
-    Section    "Debitan 1"                 ← fichye sa a
-      └── Unit = yon Lesson (你叫什麼名字)   ← models/lesson.py
-            └── Activity = yon nœud         ← models/activity.py
+    Section    "Beginner 1"                ← this file
+      └── Unit = a Lesson (你叫什麼名字)     ← models/lesson.py
+            └── Activity = a node           ← models/activity.py
 
-BATI POU L GRANDI
+BUILT TO GROW
 
-  Ou di w ap ajoute anpil seksyon ak anpil nivo pi devan. Donk:
+  You said you'll be adding many sections and many levels later. So:
 
-  1. `Section` PA kenbe objè `Lesson` yo — li kenbe NIMEWO yo
-     (`lesson_numbers`). Konsa ajoute yon seksyon se ekri yon liy nan
-     `data/lessons/all_lessons.py`, pa touche modèl la.
+  1. `Section` does NOT hold `Lesson` objects — it holds their NUMBERS
+     (`lesson_numbers`). So adding a section means writing one line in
+     `data/lessons/all_lessons.py`, without touching the model.
 
-  2. Koulè a se yon ENDÈKS (`color_index`), pa yon hex. Palèt la viv nan
-     `app/theme.py`. Lè w gen 20 seksyon, endèks la anwole sou palèt la
-     otomatikman — ou pa janm bloke paske w manke koulè.
+  2. The color is an INDEX (`color_index`), not a hex value. The
+     palette lives in `app/theme.py`. Once you have 20 sections, the
+     index wraps around the palette automatically — you're never
+     blocked because you're out of colors.
 
-  3. `level` se tèks lib ("Debitan", "Entèmedyè", "HSK 3"...). Nou pa
-     fè yon Enum paske yon Enum ta vle di chak nouvo nivo mande yon
-     chanjman kòd.
+  3. `level` is free text ("Beginner", "Intermediate", "HSK 3"...). We
+     didn't make it an Enum because an Enum would mean every new level
+     needs a code change.
 """
 
 from dataclasses import dataclass, field
@@ -35,40 +36,41 @@ from dataclasses import dataclass, field
 @dataclass
 class Section:
     number: int
-    """Lòd afichaj la — 1, 2, 3... Se sa ki parèt nan 'SEKSYON 2'."""
+    """Display order — 1, 2, 3... This is what shows in 'SECTION 2'."""
 
     traditional: str
-    """Tit la an chinwa, pou bandwòl la (egz. 基礎一)."""
+    """The title in Chinese, for the banner (e.g. 基礎一)."""
 
     english: str
-    """Tit la an anglè (egz. 'Foundations 1')."""
+    """The title in English (e.g. 'Foundations 1')."""
 
     level: str = ""
-    """Etikèt nivo lib: 'Debitan', 'Entèmedyè', 'HSK 3'..."""
+    """Free level label: 'Beginner', 'Intermediate', 'HSK 3'..."""
 
     description: str = ""
-    """Yon fraz ki di sa moun nan pral kapab fè apre seksyon an."""
+    """A sentence saying what the person will be able to do after this section."""
 
     lesson_numbers: list[int] = field(default_factory=list)
-    """Nimewo leson yo, nan lòd. Se yo ki fè inite seksyon an."""
+    """The lesson numbers, in order. These are what make up the section's units."""
 
     color_index: int = 0
-    """Endèks nan palèt seksyon an (`theme.section_color()`)."""
+    """Index into the section palette (`theme.section_color()`)."""
 
     is_locked: bool = False
 
-    # ── enfòmasyon nou kalkile ────────────────────────────────
+    # ── computed info ────────────────────────────────
 
     @property
     def unit_count(self) -> int:
         return len(self.lesson_numbers)
 
     def progress(self, lessons_by_number: dict[int, object]) -> float:
-        """Mwayèn pwogrè inite yo, ant 0.0 ak 1.0.
+        """Average progress of the units, between 0.0 and 1.0.
 
-        Nou pase diksyonè a kòm agiman olye nou enpòte done yo isit la.
-        Sa kenbe `models/` pwòp: yon modèl pa dwe konnen ki kote done
-        yo soti — sinon w ap jwenn enpòtasyon sikilè lè app la grandi.
+        We pass the dictionary in as an argument instead of importing
+        the data here. This keeps `models/` clean: a model shouldn't
+        know where the data comes from — otherwise you'll get circular
+        imports as the app grows.
         """
         if not self.lesson_numbers:
             return 0.0
@@ -79,7 +81,7 @@ class Section:
         return total / len(self.lesson_numbers)
 
     def completed_units(self, lessons_by_number: dict[int, object]) -> int:
-        """Konbyen inite ki fini nèt — pou konte a '3 / 6'."""
+        """How many units are fully finished — for the '3 / 6' count."""
         done = 0
         for n in self.lesson_numbers:
             lesson = lessons_by_number.get(n)
@@ -88,5 +90,5 @@ class Section:
         return done
 
     def label(self) -> str:
-        """'SEKSYON 2' — ti majiskil ki chita anwo bandwòl la."""
-        return f"SEKSYON {self.number}"
+        """'SECTION 2' — the small caps label sitting above the banner."""
+        return f"SECTION {self.number}"
